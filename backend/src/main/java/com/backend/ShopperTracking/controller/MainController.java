@@ -21,6 +21,11 @@ public class MainController {
         return user;
     }
 
+    @PostMapping("/login")
+    public String login(@RequestBody Users user) {
+        return "Hello";
+    }
+
     @GetMapping("/hello")
     public String greeting(HttpServletRequest request) {
         return "Hello World"+ request.getSession().getId();
