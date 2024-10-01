@@ -14,7 +14,7 @@ public class UsersService {
 
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10); //bycrypt
 
-    public Users saveUser (Users user){
+    public String saveUser (Users user){
 
         user.setPassword(encoder.encode(user.getPassword()));
 
@@ -27,7 +27,7 @@ public class UsersService {
         }
 
         repo.save(user);
-        return user;
+        return "Saved";
     }
 
 }

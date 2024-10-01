@@ -1,24 +1,60 @@
-import './Login.css';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function Login(){
-return(
-    <div className='container'>
-        <div className='form-body'>
-            <label className='heading-label'>Login</label>
-            <div className='fields'>
-                <label>Username</label>
-                <input type='text' placeholder='Username'></input>
-            </div>
-            <div className='fields'>
-                <label>Password</label>
-                <input type='password' placeholder='********'></input>
-            </div>
-        </div>
-    <div className='button-container'>
-        <button>Submit</button>
-    </div>
-    </div>
-)
+function Login() {
+    const [username, setUsername] = useState('user');
+    const [password, setPassword] = useState('123');
+
+    const onSubmit = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080', {
+                auth: {
+                    username: username,
+                    password: password
+                }
+            });
+            console.log(response);
+        } catch (error) {
+            console.log('Login error:', error.response || error.message);
+        }
+    };
+
+    const forLogout = async () => {
+        try {
+            const response = await axios.post('http://localhost:8080/logout', {}, {
+                auth: {
+                    username: username,
+                    password: password,
+                }
+            });
+            console.log(response);
+        } catch (error) {
+            console.log('Logout error:', error.response || error.message);
+        }
+    };
+
+    const forFetch = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080');
+            console.log(response);
+        } catch (error) {
+            console.log('Fetch error:', error.response || error.message);
+        }
+    };
+
+    return (
+        <>
+            <button onClick={onSubmit}>
+                Try Login
+            </button>
+            <button onClick={forLogout}>
+                Try Logout
+            </button>
+            <button onClick={forFetch}>
+                Try Fetch
+            </button>
+        </>
+    );
 }
 
 export default Login;

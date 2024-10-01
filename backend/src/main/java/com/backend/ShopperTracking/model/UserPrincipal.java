@@ -25,18 +25,6 @@ public class UserPrincipal implements UserDetails {
         return authorities;
 
     }
-//
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        Set<Role> roles = user.getRole();
-//        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-//
-//        for (Role role : roles) {
-//            authorities.add(new SimpleGrantedAuthority(role.getName()));
-//        }
-//
-//        return authorities;
-//    }
 
     @Override
     public String getPassword() {

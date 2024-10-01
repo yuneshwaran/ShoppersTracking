@@ -6,9 +6,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TrackingController {
 
-    @GetMapping("/api")
-    public String greeting(){
-        return "Hello there!";
-    }
 
 }

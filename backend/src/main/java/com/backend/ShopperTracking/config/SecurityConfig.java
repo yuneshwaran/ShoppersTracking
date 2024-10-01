@@ -14,6 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 
 @Configuration
@@ -23,6 +25,10 @@ public class SecurityConfig {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+
+    @Autowired
+    private JwtFilter jwtFilter;
 
     //AUTH PROVIDER
     @Bean
@@ -44,22 +50,23 @@ public class SecurityConfig {
 
         http.csrf(customizer -> customizer.disable())
             .authorizeHttpRequests(request -> request
-                    .requestMatchers("api/register").hasRole("ADMIN")
-                    .requestMatchers("api/login").permitAll()
+                    .requestMatchers("/login","/logout","/api/**","/").permitAll()
+                    .requestMatchers("/register").hasRole("ADMIN")
+
                     .anyRequest().authenticated()
 
             )
-            .httpBasic(Customizer.withDefaults())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class );
 
             //logout handling
-            http.logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
-                        .permitAll());
+//            http.logout(logout -> logout
+//                        .logoutUrl("/logout")
+//                        .logoutSuccessUrl("/login")
+//                        .invalidateHttpSession(true)
+//                        .clearAuthentication(true)
+//                        .permitAll());
 
 
         return http.build();
@@ -70,8 +77,5 @@ public class SecurityConfig {
 
         return config.getAuthenticationManager();
     }
-
-
-
 
 }
