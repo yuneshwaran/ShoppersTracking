@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 
 @Configuration
@@ -77,5 +77,16 @@ public class SecurityConfig {
 
         return config.getAuthenticationManager();
     }
+//
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//
+//
+//        registry.addResourceHandler("/css/**")
+//                .addResourceLocations("/css/");
+//
+//        registry.addResourceHandler("/js/**")
+//                .addResourceLocations("js/");
+//    }
 
 }
