@@ -1,6 +1,6 @@
 package com.backend.ShopperTracking.service;
 
-import com.backend.ShopperTracking.model.Users;
+import com.backend.ShopperTracking.model.Users.Users;
 import com.backend.ShopperTracking.repository.UsersRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

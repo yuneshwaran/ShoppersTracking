@@ -1,4 +1,4 @@
-package com.backend.ShopperTracking.model;
+package com.backend.ShopperTracking.model.Users;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

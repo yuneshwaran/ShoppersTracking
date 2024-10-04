@@ -1,9 +1,8 @@
 package com.backend.ShopperTracking.controller;
 
-import com.backend.ShopperTracking.model.Users;
+import com.backend.ShopperTracking.model.Users.Users;
 import com.backend.ShopperTracking.service.JWTService;
 import com.backend.ShopperTracking.service.UsersService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

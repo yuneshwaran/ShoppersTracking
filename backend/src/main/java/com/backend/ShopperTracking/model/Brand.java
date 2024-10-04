@@ -1,6 +1,5 @@
 package com.backend.ShopperTracking.model;
 
-import com.backend.ShopperTracking.model.sensors.HangerSensor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,36 +7,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity
-@Table(name = "product")
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "brand")
 @Getter
 @Setter
-public class Product {
+public class Brand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private int price;
+    private String description;
 
-    @ManyToOne
-    private Brand brand;
+//    @ManyToOne
+//    @JsonIgnore
+//    private Shelf shelf;
 
-    @ManyToOne
-    private Shelf shelf;
-
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "brand")
     @JsonIgnore
-    private List<HangerSensor> hanger_sensor;
-
-    @OneToOne(mappedBy = "product")
-    @JsonIgnore
-    private Inventory inventory;
-    //Getter Setter
+    private List<Product> products = new ArrayList<>();
 
 }

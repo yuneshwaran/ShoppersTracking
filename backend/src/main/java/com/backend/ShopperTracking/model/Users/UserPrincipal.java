@@ -1,11 +1,8 @@
-package com.backend.ShopperTracking.model;
+package com.backend.ShopperTracking.model.Users;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
-import javax.management.relation.Role;
 import java.util.*;
 
 
