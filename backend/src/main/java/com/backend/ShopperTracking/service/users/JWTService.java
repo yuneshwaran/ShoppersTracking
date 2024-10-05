@@ -1,4 +1,4 @@
-package com.backend.ShopperTracking.service;
+package com.backend.ShopperTracking.service.users;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

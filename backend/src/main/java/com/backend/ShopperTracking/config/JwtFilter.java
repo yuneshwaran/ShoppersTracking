@@ -1,8 +1,8 @@
 package com.backend.ShopperTracking.config;
 
 
-import com.backend.ShopperTracking.service.JWTService;
-import com.backend.ShopperTracking.service.MyUserDetailsService;
+import com.backend.ShopperTracking.service.users.JWTService;
+import com.backend.ShopperTracking.service.users.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

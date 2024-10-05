@@ -1,15 +1,9 @@
 package com.backend.ShopperTracking.controller;
 
-
-import com.backend.ShopperTracking.model.Brand;
-import com.backend.ShopperTracking.model.Inventory;
-import com.backend.ShopperTracking.model.Product;
-import com.backend.ShopperTracking.model.Shelf;
-import com.backend.ShopperTracking.service.BrandService;
-import com.backend.ShopperTracking.service.InventoryService;
-import com.backend.ShopperTracking.service.ProductsService;
-import com.backend.ShopperTracking.service.ShelfService;
+import com.backend.ShopperTracking.model.*;
+import com.backend.ShopperTracking.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,13 +24,17 @@ public class EntityController {
     @Autowired
     InventoryService inventoryService;
 
-//inventory
+    @Autowired
+    TrialRoomService trialRoomService;
+
+    //inventory
     @GetMapping("/stock")
     public List<Inventory> getStock() {
         return inventoryService.getInventory();
     }
 
-//shelf
+
+    //shelf
     @GetMapping("/shelf")
     public List<Shelf> getShelves() {
         return shelfService.getShelves();
@@ -44,6 +42,10 @@ public class EntityController {
     @GetMapping("/shelf/{id}")
     public Shelf getShelf(@PathVariable int id) {
         return shelfService.getShelf(id);
+    }
+    @GetMapping("/shelf/{id}/product")
+    public List<Product> getProduct(@PathVariable int id) {
+        return productsService.getAllProductsByShelf(id);
     }
     @PostMapping("/shelf")
     public String getShelves(@RequestBody Shelf shelf) {
@@ -57,6 +59,7 @@ public class EntityController {
     public String deleteShelves(@PathVariable int id) {
         return shelfService.deleteShelf(id);
     }
+
 
     //brand
     @GetMapping("/brand")
@@ -80,6 +83,7 @@ public class EntityController {
         return brandService.deleteById(id);
     }
 
+
     //products
     @GetMapping("/brand/product")
     public List<Product> getProducts() {
@@ -101,5 +105,58 @@ public class EntityController {
     public String deleteProduct(@PathVariable int pid) {
         return productsService.deleteProduct(pid);
     }
+
+
+    //Trial Room
+    @GetMapping("/trialroom")
+    public List<TrialRoom> getAllTrialRooms() {
+        return trialRoomService.getAllTrialRooms();
+    }
+    @GetMapping("/trialroom/{id}")
+    public TrialRoom getTrialRoom(@PathVariable int id) {
+        return trialRoomService.getTrialRoomById(id);
+    }
+    @PostMapping("/trialroom")
+    public String addTrialRoom(@RequestBody TrialRoom trialRoom) {
+        return trialRoomService.addTrialRoom(trialRoom);
+    }
+    @PutMapping("/trialroom")
+    public String updateTrialRoom(@RequestBody TrialRoom trialRoom) {
+        return trialRoomService.updateTrialRoom(trialRoom);
+    }
+    @DeleteMapping("/trialroom/{id}")
+    public String deleteTrialRoom(@PathVariable int id) {
+        return trialRoomService.deleteTrialRoom(id);
+    }
+
+    //inventory
+    @GetMapping("/inventory")
+    public ResponseEntity<List<Inventory>> getAllInventory() {
+        List<Inventory> inventoryList = inventoryService.getAllInventory();
+        return ResponseEntity.ok(inventoryList);
+    }
+
+    // Endpoint to get a single inventory item by product ID
+    @GetMapping("/inventory/{productId}")
+    public ResponseEntity<Inventory> getInventoryByProductId(@PathVariable int productId) {
+        Inventory inventory = inventoryService.getInventoryByProductId(productId).orElse(new Inventory());
+        if (inventory != null) {
+            return ResponseEntity.ok(inventory);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Endpoint to manually update inventory for a product
+    @PutMapping("/update/{productId}")
+    public ResponseEntity<Inventory> updateInventory(@PathVariable int productId, @RequestBody Inventory updatedInventory) {
+        Inventory inventory = inventoryService.updateInventory(updatedInventory);
+        if (inventory != null) {
+            return ResponseEntity.ok(inventory);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

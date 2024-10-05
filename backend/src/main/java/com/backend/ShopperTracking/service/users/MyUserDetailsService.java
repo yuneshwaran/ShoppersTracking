@@ -1,4 +1,4 @@
-package com.backend.ShopperTracking.service;
+package com.backend.ShopperTracking.service.users;
 
 import com.backend.ShopperTracking.model.Users.UserPrincipal;
 import com.backend.ShopperTracking.model.Users.Users;

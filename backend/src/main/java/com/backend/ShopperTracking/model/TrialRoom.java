@@ -1,5 +1,6 @@
 package com.backend.ShopperTracking.model;
 
+import com.backend.ShopperTracking.model.logs.TrialRoomLog;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,36 +8,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
-
-@Entity
-@Table(name = "product")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Product {
+@Entity
+@Table(name = "TrialRoom")
+public class TrialRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String name;
-    private int price;
-    private Date LastUpdated;
 
-    @ManyToOne
-    private Brand brand;
+    private String location;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "trialRoom", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<HangerSensor> hangerSensor;
+    private List<TrialRoomLog> logs = new ArrayList<>();
 
-    @OneToOne(mappedBy = "product")
-    @JsonIgnore
-    private Inventory inventory;
-
-    //Getter Setter
-
+    // Optional: You can add additional methods if necessary
 }

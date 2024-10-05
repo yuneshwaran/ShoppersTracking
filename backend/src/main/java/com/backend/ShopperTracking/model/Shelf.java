@@ -1,13 +1,12 @@
 package com.backend.ShopperTracking.model;
 
-import com.backend.ShopperTracking.model.sensors.HangerSensor;
-import com.backend.ShopperTracking.model.sensors.ShelfSensor;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
 
 @Entity
 @AllArgsConstructor
@@ -22,22 +21,15 @@ public class Shelf {
     private int id;
     private String name;
     private String location;
+    private Date LastUpdated;
 
     @OneToOne(cascade = CascadeType.ALL,mappedBy = "shelf")
     @JsonIgnore
     private ShelfSensor sensor;
 
-//    @OneToMany(mappedBy = "shelf")
-//    @JsonIgnore
-//    private List<Brand> brand = new ArrayList<>();
-
     @OneToMany(mappedBy = "shelf")
     @JsonIgnore
-    private List<Product> products = new ArrayList<>();
-
-    @OneToMany(mappedBy = "shelf")
-    @JsonIgnore
-    private List<HangerSensor> hangerSensor = new ArrayList<>();
+    private List<HangerSensor> hangerSensor;
 
     //Getter Setter
 

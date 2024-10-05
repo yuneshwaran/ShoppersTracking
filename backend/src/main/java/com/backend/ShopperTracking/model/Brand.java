@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -24,6 +25,7 @@ public class Brand {
     private int id;
     private String name;
     private String description;
+    private Date LastUpdated;
 
 //    @ManyToOne
 //    @JsonIgnore

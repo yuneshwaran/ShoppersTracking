@@ -35,4 +35,12 @@ public class ProductsService {
         repo.save(product);
         return "Product updated successfully";
     }
+
+    public List<Product> getAllProductsByShelf(int id) {
+        return repo.findProductByShelfId(id);
+    }
+
+    public Product getProductById(int productId) {
+        return repo.findById(productId).get();
+    }
 }

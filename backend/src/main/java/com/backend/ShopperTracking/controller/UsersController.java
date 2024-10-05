@@ -1,8 +1,8 @@
 package com.backend.ShopperTracking.controller;
 
 import com.backend.ShopperTracking.model.Users.Users;
-import com.backend.ShopperTracking.service.JWTService;
-import com.backend.ShopperTracking.service.UsersService;
+import com.backend.ShopperTracking.service.users.JWTService;
+import com.backend.ShopperTracking.service.users.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,9 +25,7 @@ public class UsersController {
 
     @PostMapping("/register")
     public String register(@RequestBody Users user) {
-
         return usersService.saveUser(user);
-
     }
 
     @PostMapping("/login")
@@ -37,15 +35,10 @@ public class UsersController {
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
         if(authentication.isAuthenticated()) {
-
             return jwtService.generateJWT(user.getUsername());
-
         }
         else {
             return "fail";
         }
-
     }
-
-
 }

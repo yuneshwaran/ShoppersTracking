@@ -1,26 +1,22 @@
-package com.backend.ShopperTracking.model.sensors;
+package com.backend.ShopperTracking.model;
 
-import com.backend.ShopperTracking.model.Shelf;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Entity
-@Table(name = "ShelfSensor")
+@Table(name = "shelf_sensor")
 @Getter
 @Setter
 public class ShelfSensor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int shelfSensorId;
+    private int id;
 
     @OneToOne
+    @JoinColumn(name = "shelf_id", nullable = false)
     private Shelf shelf;
 
-    private Date createdOn;
-
-
+    // You can add other sensor-specific fields as needed
 }
