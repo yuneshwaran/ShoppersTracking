@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/sensors")
+@CrossOrigin(origins = "http://localhost:3000")
 public class SensorController {
 
     @Autowired
@@ -71,10 +72,9 @@ public class SensorController {
     }
 
     @GetMapping("/hanger/{id}")
-    public ResponseEntity<HangerSensor> getHangerSensorById(@PathVariable int id) {
-        Optional<HangerSensor> sensor = hangerSensorService.getHangerSensorById(id);
-        return sensor.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public HangerSensor getHangerSensorById(@PathVariable int id) {
+        HangerSensor sensor = hangerSensorService.getHangerSensorById(id);
+        return sensor;
     }
 
     @GetMapping("/hanger/shelf/{shelfId}")

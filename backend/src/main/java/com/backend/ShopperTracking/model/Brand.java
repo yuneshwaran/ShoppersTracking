@@ -27,9 +27,6 @@ public class Brand {
     private String description;
     private Date LastUpdated;
 
-//    @ManyToOne
-//    @JsonIgnore
-//    private Shelf shelf;
 
     @OneToMany(mappedBy = "brand")
     @JsonIgnore

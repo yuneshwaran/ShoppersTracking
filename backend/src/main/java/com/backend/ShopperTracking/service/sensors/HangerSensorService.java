@@ -21,8 +21,8 @@ public class HangerSensorService {
     }
 
     // Get a hanger sensor by ID
-    public Optional<HangerSensor> getHangerSensorById(int id) {
-        return hangerSensorRepo.findById(id);
+    public HangerSensor getHangerSensorById(int id) {
+        return hangerSensorRepo.findById(id).orElse(new HangerSensor());
     }
 
     // Get all hanger sensors by shelf ID

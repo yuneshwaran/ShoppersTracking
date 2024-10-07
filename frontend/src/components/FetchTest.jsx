@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Login() {
     const [username, setUsername] = useState('user');
     const [password, setPassword] = useState('123');
+    const [data,setData] = useState('Hello  ');
 
+    useEffect(()=>{
+
+        forFetch()
+    },[])
     const onSubmit = async () => {
         try {
             const response = await axios.get('http://localhost:8080', {
@@ -28,6 +33,7 @@ function Login() {
                 }
             });
             console.log(response);
+            
         } catch (error) {
             console.log('Logout error:', error.response || error.message);
         }
@@ -35,8 +41,9 @@ function Login() {
 
     const forFetch = async () => {
         try {
-            const response = await axios.get('http://localhost:8080');
+            const response = await axios.get('http://localhost:8080/api/stock/3');
             console.log(response);
+      
         } catch (error) {
             console.log('Fetch error:', error.response || error.message);
         }
@@ -53,6 +60,9 @@ function Login() {
             <button onClick={forFetch}>
                 Try Fetch
             </button>
+            <p>
+                {data}
+            </p>
         </>
     );
 }

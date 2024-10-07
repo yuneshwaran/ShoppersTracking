@@ -1,4 +1,4 @@
-package com.backend.ShopperTracking.model.logs;
+package com.backend.ShopperTracking.dto;
 
 import com.backend.ShopperTracking.model.HangerSensor;
 import com.backend.ShopperTracking.model.Product;
@@ -36,5 +36,4 @@ public class TrialRoomLog {
     @ManyToOne
     private HangerSensor hangerSensor;
 
-    // Removed exitTime and purchased fields, along with the related methods
 }

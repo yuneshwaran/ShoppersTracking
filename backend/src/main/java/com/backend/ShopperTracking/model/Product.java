@@ -37,6 +37,5 @@ public class Product {
     @JsonIgnore
     private Inventory inventory;
 
-    //Getter Setter
 
 }

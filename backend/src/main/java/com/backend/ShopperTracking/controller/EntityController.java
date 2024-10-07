@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000")
 public class EntityController {
 
     @Autowired
@@ -27,11 +28,6 @@ public class EntityController {
     @Autowired
     TrialRoomService trialRoomService;
 
-    //inventory
-    @GetMapping("/stock")
-    public List<Inventory> getStock() {
-        return inventoryService.getInventory();
-    }
 
 
     //shelf
@@ -130,25 +126,20 @@ public class EntityController {
     }
 
     //inventory
-    @GetMapping("/inventory")
-    public ResponseEntity<List<Inventory>> getAllInventory() {
-        List<Inventory> inventoryList = inventoryService.getAllInventory();
+    @GetMapping("/stock")
+    public ResponseEntity<List<Inventory>> getInventory() {
+        List<Inventory> inventoryList = inventoryService.getInventory();
         return ResponseEntity.ok(inventoryList);
     }
 
     // Endpoint to get a single inventory item by product ID
-    @GetMapping("/inventory/{productId}")
-    public ResponseEntity<Inventory> getInventoryByProductId(@PathVariable int productId) {
-        Inventory inventory = inventoryService.getInventoryByProductId(productId).orElse(new Inventory());
-        if (inventory != null) {
-            return ResponseEntity.ok(inventory);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/stock/{inventoryId}")
+    public Inventory getInventoryById(@PathVariable int inventoryId) {
+        return inventoryService.getInventoryById(inventoryId);
     }
 
     // Endpoint to manually update inventory for a product
-    @PutMapping("/update/{productId}")
+    @PutMapping("/stock/{productId}")
     public ResponseEntity<Inventory> updateInventory(@PathVariable int productId, @RequestBody Inventory updatedInventory) {
         Inventory inventory = inventoryService.updateInventory(updatedInventory);
         if (inventory != null) {

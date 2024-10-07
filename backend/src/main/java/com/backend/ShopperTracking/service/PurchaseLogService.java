@@ -3,7 +3,7 @@ package com.backend.ShopperTracking.service;
 import com.backend.ShopperTracking.dto.PurchaseLogRequest;
 import com.backend.ShopperTracking.model.Inventory;
 import com.backend.ShopperTracking.model.Product;
-import com.backend.ShopperTracking.model.logs.PurchaseLog;
+import com.backend.ShopperTracking.dto.PurchaseLog;
 import com.backend.ShopperTracking.repository.InventoryRepo;
 import com.backend.ShopperTracking.repository.ProductRepo;
 import com.backend.ShopperTracking.repository.PurchaseLogRepo;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class PurchaseLogService {
@@ -40,7 +41,7 @@ public class PurchaseLogService {
 
 
         inventory.setQuantity(inventory.getQuantity() - request.getQuantity());
-        inventory.setLastUpdated(new Date()); // Update the timestamp
+        inventory.setLastUpdated(new Date());
 
 
         inventoryRepo.save(inventory);
@@ -61,5 +62,9 @@ public class PurchaseLogService {
         purchaseLog.setPurchaseDate(new Date());
 
         return purchaseLogRepo.save(purchaseLog);
+    }
+
+    public List<PurchaseLog> getAll() {
+        return purchaseLogRepo.findAll();
     }
 }

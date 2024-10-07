@@ -1,6 +1,6 @@
 package com.backend.ShopperTracking.repository.sensors;
 
-import com.backend.ShopperTracking.model.logs.ShelfSensorLog;
+import com.backend.ShopperTracking.dto.ShelfSensorLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

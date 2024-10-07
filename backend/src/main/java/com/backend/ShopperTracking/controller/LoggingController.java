@@ -2,9 +2,9 @@ package com.backend.ShopperTracking.controller;
 
 
 import com.backend.ShopperTracking.dto.PurchaseLogRequest;
-import com.backend.ShopperTracking.model.logs.PurchaseLog;
-import com.backend.ShopperTracking.model.logs.ShelfSensorLog;
-import com.backend.ShopperTracking.model.logs.TrialRoomLog;
+import com.backend.ShopperTracking.dto.PurchaseLog;
+import com.backend.ShopperTracking.dto.ShelfSensorLog;
+import com.backend.ShopperTracking.dto.TrialRoomLog;
 import com.backend.ShopperTracking.dto.TrialRoomLogRequest;
 import com.backend.ShopperTracking.service.PurchaseLogService;
 import com.backend.ShopperTracking.service.sensors.ShelfSensorLogService;
@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/track")
+@CrossOrigin(origins = "http://localhost:3000")
 public class LoggingController {
 
     @Autowired
@@ -30,16 +31,18 @@ public class LoggingController {
 
     //shelfSensorLogging
 
-    // Endpoint to log when customer starts waiting near a shelf
+    //Log the entry with the shelfId
     @PostMapping("/shelf/entry/{shelfId}")
-    public com.backend.ShopperTracking.model.logs.ShelfSensorLog logEntry(@PathVariable int shelfId) {
+    public ShelfSensorLog logEntry(@PathVariable int shelfId) {
         return shelfSensorLogService.logEntry(shelfId);
     }
 
-    // Endpoint to log when customer stops waiting near a shelf
-    @PostMapping("/shelf/exit/{logId}")
-    public com.backend.ShopperTracking.model.logs.ShelfSensorLog logExit(@PathVariable int logId) {
-        return shelfSensorLogService.logExit(logId);
+
+// Log the exit with the log id
+    @PutMapping("/shelf/exit/{shelfId}")
+    public ShelfSensorLog logExit(@RequestBody ShelfSensorLog log) {
+        int id = log.getId();
+        return shelfSensorLogService.logExit(id);
     }
 
     // Fetch logs by Shelf ID
@@ -50,7 +53,7 @@ public class LoggingController {
 
     // Fetch all logs
     @GetMapping("/shelf/logs")
-    public List<com.backend.ShopperTracking.model.logs.ShelfSensorLog> getAllLogs() {
+    public List<ShelfSensorLog> getAllLogs() {
         return shelfSensorLogService.getAllLogs();
     }
 
@@ -58,16 +61,24 @@ public class LoggingController {
 
     //add entry into the trial room
     @PostMapping("/trial/entry")
-    public ResponseEntity<String> logEntry(@RequestBody TrialRoomLogRequest request) {
-        TrialRoomLog log = trialRoomLogService.addTrialRoomLog(request.getTrialRoomId(), request.getProductId(), request.getCustomerId());
-        return ResponseEntity.ok("Entry logged successfully with ID: " + log.getId());
+    public String logEntry(@RequestBody TrialRoomLogRequest request) {
+        TrialRoomLog log = trialRoomLogService.addTrialRoomLog(request.getTrialRoomId(), request.getProductId(), request.getCustomerId(),request.getHangerId());
+        return ("Entry logged successfully with ID: " + log.getId());
     }
+//    // Log exit from the trial room
+//    @PostMapping("/trial/exit")
+//    public ResponseEntity<String> logExit(@RequestBody TrialRoomExitRequest request) {
+//        TrialRoomLog log = trialRoomLogService.logTrialRoomExit(request.getTrialRoomId(), request.getCustomerId());
+//        return ResponseEntity.ok("Exit logged successfully with ID: " + log.getId());
+//    }
+
 
     //get all trial room logs
     @GetMapping("/trial/all")
-    public ResponseEntity<List<TrialRoomLog>> getAllTrialRoomLogs() {
+    public List<TrialRoomLog> getAllTrialRoomLogs() {
         List<TrialRoomLog> logs = trialRoomLogService.getAllTrialRoomLogs();
-        return ResponseEntity.ok(logs);
+        return logs;
+
     }
 
     //purchase Logging
@@ -80,13 +91,8 @@ public class LoggingController {
             return ResponseEntity.badRequest().body(null); // Handle errors, e.g., insufficient stock
         }
     }
-
-
-    //get logs by customer ID
-//    @GetMapping("/trial/customer")
-//    public ResponseEntity<List<TrialRoomLog>> getLogsByCustomerId(@RequestParam int customerId) {
-//        List<TrialRoomLog> logs = trialRoomLogService.getLogsByCustomerId(customerId);
-//        return ResponseEntity.ok(logs);
-//    }
-
+    @GetMapping("/purchase")
+    public List<PurchaseLog> getAllPurchaseLogs() {
+        return purchaseLogService.getAll();
+    }
 }

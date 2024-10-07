@@ -15,7 +15,7 @@ public class InventoryService {
     private InventoryRepo inventoryRepo;
 
     // Get all inventory items
-    public List<Inventory> getAllInventory() {
+    public List<Inventory> getInventory() {
         return inventoryRepo.findAll();
     }
 
@@ -29,7 +29,8 @@ public class InventoryService {
         return inventoryRepo.save(inventory);
     }
 
-    public List<Inventory> getInventory() {
-        return inventoryRepo.findAll();
+
+    public Inventory getInventoryById(int inventoryId) {
+        return inventoryRepo.findById(inventoryId).orElse(null);
     }
 }

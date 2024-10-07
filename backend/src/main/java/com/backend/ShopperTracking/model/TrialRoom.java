@@ -1,6 +1,6 @@
 package com.backend.ShopperTracking.model;
 
-import com.backend.ShopperTracking.model.logs.TrialRoomLog;
+import com.backend.ShopperTracking.dto.TrialRoomLog;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

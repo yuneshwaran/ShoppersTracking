@@ -1,0 +1,26 @@
+
+Trial Room Logging
+
+Log entry
+POST: 'http://localhost:8080/api/track/trial/entry'
+body : 	{
+  		"trialRoomId": 1,
+  		"productId": 3,
+  		"customerId": 123,
+  		"hangerId": 1
+	}
+
+Shelf Sensor Logging
+
+Log entry
+POST: 'http://localhost:8080/api/track/shelf/entry/{shelf-id}'
+body : 	{
+  		// no need
+	}
+	response : "Shelf Sensor Log id" 
+
+Log exit
+PUT: 'http://localhost:8080/api/track/shelf/exit/{shelf-id}'
+body : 	{
+  		"id":{log id}
+	}

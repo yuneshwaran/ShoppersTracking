@@ -1,4 +1,4 @@
-package com.backend.ShopperTracking.model.logs;
+package com.backend.ShopperTracking.dto;
 
 import com.backend.ShopperTracking.model.Product;
 import jakarta.persistence.*;
@@ -29,5 +29,4 @@ public class PurchaseLog {
 
     private Date purchaseDate;
 
-    // Other necessary fields and methods
 }

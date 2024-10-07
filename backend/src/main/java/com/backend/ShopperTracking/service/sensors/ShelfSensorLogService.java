@@ -1,7 +1,7 @@
 package com.backend.ShopperTracking.service.sensors;
 
 import com.backend.ShopperTracking.model.Shelf;
-import com.backend.ShopperTracking.model.logs.ShelfSensorLog;
+import com.backend.ShopperTracking.dto.ShelfSensorLog;
 import com.backend.ShopperTracking.repository.sensors.ShelfSensorLogRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class ShelfSensorLogService {
     public ShelfSensorLog logEntry(int shelfId) {
         ShelfSensorLog log = new ShelfSensorLog();
         Shelf shelf = new Shelf();
-        shelf.setId(shelfId); // Assuming you're just setting shelf by ID, you can fetch it from a Shelf service if needed.
+        shelf.setId(shelfId);
 
         log.setShelf(shelf);
         log.setEntryTime(new Date());
@@ -28,6 +28,7 @@ public class ShelfSensorLogService {
 
     // Log customer exit near a shelf
     public ShelfSensorLog logExit(int logId) {
+
         ShelfSensorLog log = shelfSensorLogRepo.findById(logId).orElse(null);
 
         if (log != null) {
