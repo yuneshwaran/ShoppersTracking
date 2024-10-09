@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../utils/axiosInstance';
 import { Line } from 'react-chartjs-2';
 import { Form } from 'react-bootstrap';
 import dayjs from 'dayjs';
@@ -13,10 +12,11 @@ import {
   Title,
   Tooltip,
   Legend,
-  TimeScale, // Added TimeScale for time on x-axis
+  TimeScale,
 } from 'chart.js';
+import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 
-// Register the scales and elements
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -25,32 +25,30 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  TimeScale // Register TimeScale for time-based x-axis
+  TimeScale
 );
 
 const ShelfSensorLogs = () => {
-
   const moment = require('moment');
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [timeRange, setTimeRange] = useState('1m');
-  const [selectedShelf, setSelectedShelf] = useState(''); // State for selected shelf
-  const [shelves, setShelves] = useState([]); // State to hold unique shelves
+  const [selectedShelf, setSelectedShelf] = useState('');
+  const [shelves, setShelves] = useState([]);
 
-  // Fetch all logs on component mount
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await axiosInstance.get('/api/track/shelf/logs');
+        // const response = axiosInstance.get('/api/track/shelf/logs')
+         const response = await axios.get('http://localhost:8080/api/track/shelf/logs');
         setLogs(response.data);
-        
-        // Extract unique shelves from the logs
-        const uniqueShelves = Array.from(new Set(response.data.map(log => log.shelf.id))) // Extract unique shelf IDs
-          .map(id => response.data.find(log => log.shelf.id === id).shelf); // Map the unique IDs back to the shelf objects
+
+        const uniqueShelves = Array.from(new Set(response.data.map(log => log.shelf.id)))
+          .map(id => response.data.find(log => log.shelf.id === id).shelf);
 
         setShelves(uniqueShelves);
         if (uniqueShelves.length > 0) {
-          setSelectedShelf(uniqueShelves[0].id); // Default to the first unique shelf
+          setSelectedShelf(uniqueShelves[0].id);
         }
       } catch (error) {
         console.error('Failed to fetch shelf logs:', error);
@@ -59,10 +57,9 @@ const ShelfSensorLogs = () => {
     fetchLogs();
   }, []);
 
-  // Filter logs by time range and selected shelf
   useEffect(() => {
     const now = dayjs();
-    let filteredData = logs.filter(log => log.shelf.id === selectedShelf); // Filter by selected shelf
+    let filteredData = logs.filter(log => log.shelf.id === selectedShelf);
 
     switch (timeRange) {
       case '1m':
@@ -74,9 +71,6 @@ const ShelfSensorLogs = () => {
       case '6m':
         filteredData = filteredData.filter(log => dayjs(log.entryTime).isAfter(now.subtract(6, 'months')));
         break;
-      case 'ytd':
-        filteredData = filteredData.filter(log => dayjs(log.entryTime).isAfter(now.startOf('year')));
-        break;
       default:
         filteredData = filteredData;
     }
@@ -84,43 +78,60 @@ const ShelfSensorLogs = () => {
     setFilteredLogs(filteredData);
   }, [logs, timeRange, selectedShelf]);
 
-  // Data for Chart.js
-  const data = {
-    labels: filteredLogs.map(log => dayjs(log.entryTime).format('YYYY-MM-DD')), // Time on x-axis
-    datasets: [
-      {
-        label: `Shelf: ${shelves.find(shelf => shelf.id === selectedShelf)?.name || ''} - Duration (mins)`,
-        data: filteredLogs.map(log => dayjs(log.exitTime).diff(dayjs(log.entryTime), 'minute')), // Duration in minutes
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      },
-    ],
+    const data = {
+      labels: filteredLogs.map(log => dayjs(log.entryTime).format('YYYY-MM-DD')),
+      datasets: [
+        {
+          label: `Shelf: ${shelves.find(shelf => shelf.id === selectedShelf)?.name || ''} - Duration (mins)`,
+          data: filteredLogs.map(log => dayjs(log.exitTime).diff(dayjs(log.entryTime), 'minute')),
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        },
+      ],
   };
 
   return (
-    <div>
-      <h2>Shelf Sensor Logs</h2>
-      
-      {/* Shelf Selection Dropdown */}
-      <Form.Select aria-label="Select Shelf" onChange={(e) => setSelectedShelf(Number(e.target.value))} value={selectedShelf}>
-        {shelves.map(shelf => (
-          <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
-        ))}
-      </Form.Select>
+    <div className='container'>
 
-      {/* Time Range Selection Dropdown */}
-      <Form.Select aria-label="Time range" onChange={(e) => setTimeRange(e.target.value)} style={{ marginTop: '1rem' }}>
-        <option value="1m">Last 1 Month</option>
-        <option value="3m">Last 3 Months</option>
-        <option value="6m">Last 6 Months</option>
-        <option value="ytd">Year to Date</option>
-        <option value="all">All Time</option>
-      </Form.Select>
+          <div>
+            <h2 className='badge text-ligh fs-4'>Shelf Sensor Logs</h2>
+          </div>
 
-      {/* Line Chart */}
-      <Line data={data} />
+          <div className='d-flex align-items-center text-align-center mb-3'>
+              <div className='container align-items-center'>
+                    <div className='text-light'>Shelf name</div>
+
+                    <Form.Select
+                      className='me-2'
+                      aria-label="Select Shelf"
+                      onChange={(e) => setSelectedShelf(Number(e.target.value))}
+                      value={selectedShelf}>
+                      {shelves.map(shelf => (
+                    <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
+                      ))}
+                    </Form.Select>
+              </div>
+
+              <div className='container align-items-center'>
+                      
+                    <div className='text-light'>Time Frame</div>
+                    
+                    <Form.Select
+                      aria-label="Time range"
+                      onChange={(e) => setTimeRange(e.target.value)}>
+                        <option value="1m">Last 1 Month</option>
+                        <option value="3m">Last 3 Months</option>
+                        <option value="6m">Last 6 Months</option>
+                        <option value="all">All Time</option>
+                    </Form.Select>
+                </div>
+          </div>      
+
+          <div className='row'>
+            <Line data={data} />
+          </div>
     </div>
   );
-};
 
+}
 export default ShelfSensorLogs;

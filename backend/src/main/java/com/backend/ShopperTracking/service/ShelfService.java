@@ -6,6 +6,7 @@ import com.backend.ShopperTracking.repository.ShelfRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -13,18 +14,18 @@ public class ShelfService {
 
     @Autowired
     ShelfRepo shelfRepo;
-
-    public String saveShelf(Shelf shelf){
-          try{
-              System.out.println(shelf.toString());
-              shelfRepo.save(shelf);
-          } catch (RuntimeException e) {
-
-              throw new RuntimeException(e);
-
-          }
-          return "Shelf saved";
-    }
+//
+//    public String saveShelf(Shelf shelf){
+//          try{
+//              System.out.println(shelf.toString());
+//              shelfRepo.save(shelf);
+//          } catch (RuntimeException e) {
+//
+//              throw new RuntimeException(e);
+//
+//          }
+//          return "Shelf saved";
+//    }
 
     public Shelf getShelf(int id){
 
@@ -39,6 +40,8 @@ public class ShelfService {
     }
 
     public String addShelf(Shelf shelf) {
+
+        shelf.setLastUpdated(new Date());
         try{
             shelfRepo.save(shelf);
             return "Shelf saved";
@@ -50,7 +53,7 @@ public class ShelfService {
     }
 
     public String updateShelf(Shelf shelf) {
-
+        shelf.setLastUpdated(new Date());
         try{ shelfRepo.save(shelf);
             return "Shelf updated";}
         catch (RuntimeException e) {

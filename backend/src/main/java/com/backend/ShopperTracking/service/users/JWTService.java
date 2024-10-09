@@ -1,10 +1,13 @@
 package com.backend.ShopperTracking.service.users;
 
+import com.backend.ShopperTracking.model.Users.Users;
+import com.backend.ShopperTracking.repository.UsersRepo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import javax.crypto.KeyGenerator;
@@ -20,6 +23,10 @@ import java.util.function.Function;
 
 @Service
 public class JWTService {
+
+
+    @Autowired
+    UsersRepo repo;
 
     String secretKey;
 
@@ -40,12 +47,13 @@ public class JWTService {
         }
     }
 
-
-
     //generate a JWToken
     public String generateJWT(String username){
 
+        Users user = repo.getUsersByUsername(username);
+
         Map<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getRole());
 
         return Jwts.builder()
                 .setClaims(claims)

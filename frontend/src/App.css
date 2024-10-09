@@ -1,17 +1,18 @@
-.App {
-  text-align: center;
+/* App.css */
+.container {
+  height: 100%; /* Full viewport height */
+  display: flex;
+  flex-direction: column;
 }
 
-
-/* required */
-
-/* App.css */
-.navbar {
-  justify-content: center; /* Center align Nav items */
+.row {
+  flex-grow: 1; /* Make the chart grow to fill the remaining space */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .chart-container {
-  width: 1200%; /* Full width */
-  height: calc(100vh - 56px); /* Full height minus navbar height */
-  overflow: hidden; /* Hide scrollbars */
+  width: 100%;
+  height: 100%; /* Make the chart take the full available space */
 }

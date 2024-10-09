@@ -131,22 +131,22 @@ public class EntityController {
         List<Inventory> inventoryList = inventoryService.getInventory();
         return ResponseEntity.ok(inventoryList);
     }
+    @PostMapping("/stock")
+    public String addInventory(@RequestBody Inventory inventory) {
+        return inventoryService.addInventory(inventory);
+    }
 
     // Endpoint to get a single inventory item by product ID
-    @GetMapping("/stock/{inventoryId}")
-    public Inventory getInventoryById(@PathVariable int inventoryId) {
-        return inventoryService.getInventoryById(inventoryId);
+    @GetMapping("/stock/{productId}")
+    public Inventory getInventoryById(@PathVariable int productId) {
+        return inventoryService.getInventoryById(productId);
     }
-
     // Endpoint to manually update inventory for a product
     @PutMapping("/stock/{productId}")
-    public ResponseEntity<Inventory> updateInventory(@PathVariable int productId, @RequestBody Inventory updatedInventory) {
-        Inventory inventory = inventoryService.updateInventory(updatedInventory);
-        if (inventory != null) {
-            return ResponseEntity.ok(inventory);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    public String updateInventory(@PathVariable int productId, @RequestBody Inventory updatedInventory) {
 
+        int quantity = updatedInventory.getQuantity();
+
+        return inventoryService.updateQuantity(productId, quantity);
+    }
 }

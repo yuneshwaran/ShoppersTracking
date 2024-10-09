@@ -12,7 +12,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const TrialRoomLog = () => {
   const [trialLogs, setTrialLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
-  const [timeRange, setTimeRange] = useState('1week'); // Default to 1 week
+  const [timeRange, setTimeRange] = useState('1week'); 
   const [selectedProduct, setSelectedProduct] = useState('All');
 
   useEffect(() => {
@@ -40,10 +40,14 @@ const TrialRoomLog = () => {
     const now = dayjs();
     let startDate;
 
+    // Handle time ranges
     if (range === '1week') {
       startDate = now.subtract(7, 'days');
     } else if (range === '1month') {
       startDate = now.subtract(1, 'month');
+    } else {
+      // Return all logs if 'all' is selected
+      return logs;
     }
 
     return logs.filter(log => dayjs(log.entryTime).isAfter(startDate));
@@ -84,60 +88,78 @@ const TrialRoomLog = () => {
     };
   };
 
-  // Get the list of unique products
   const getUniqueProducts = () => {
     const products = trialLogs.map(log => log.product.name);
     return ['All', ...new Set(products)];
   };
 
   return (
-    <div style={{ width: '100%', height: '500px' }}>
-      {/* Time Range Dropdown */}
-      <Form.Select
-        aria-label="Select Time Range"
-        onChange={(e) => setTimeRange(e.target.value)}
-        style={{ marginBottom: '1rem' }}
-      >
-        <option value="1week">Last 1 Week</option>
-        <option value="1month">Last 1 Month</option>
-        <option value="all">All Time</option>
-      </Form.Select>
-
-      {/* Product Dropdown */}
-      <Form.Select
-        aria-label="Select Product"
-        onChange={(e) => setSelectedProduct(e.target.value)}
-        style={{ marginBottom: '1rem' }}
-      >
-        {getUniqueProducts().map(product => (
-          <option key={product} value={product}>{product}</option>
-        ))}
-      </Form.Select>
-
-      {/* Bar Chart */}
-      <Bar
-        data={chartData()}
-        options={{
-          responsive: true,
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: 'Days'
+    <div className='container'>
+      {/* Title */}
+      <div>
+        <h2 className='badge text-light fs-4'>TrialRoom Logs</h2>
+      </div>
+  
+      {/* Selectors Row */}
+      <div className='d-flex align-items-center mb-3'>
+        
+        {/* Time Range Selector */}
+        <div className='container align-items-center'>
+          <div className='text-light'>Time Frame</div>
+          <Form.Select
+            className='me-2'
+            aria-label="Select Time Range"
+            onChange={(e) => setTimeRange(e.target.value)}
+            value={timeRange}
+          >
+            <option value="1week">Last 1 Week</option>
+            <option value="1month">Last 1 Month</option>
+            <option value="all">All Time</option>
+          </Form.Select>
+        </div>
+  
+        {/* Product Selector */}
+        <div className='container align-items-center'>
+          <div className='text-light'>Product</div>
+          <Form.Select
+            className='me-2'
+            aria-label="Select Product"
+            onChange={(e) => setSelectedProduct(e.target.value)}
+            value={selectedProduct}
+          >
+            {getUniqueProducts().map(product => (
+              <option key={product} value={product}>{product}</option>
+            ))}
+          </Form.Select>
+        </div>
+      </div>
+  
+      {/* Chart */}
+      <div className='row'>
+        <Bar
+          data={chartData()}
+          options={{
+            responsive: true,
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: 'Days'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: 'Number of Entries'
+                },
+                beginAtZero: true,
               }
             },
-            y: {
-              title: {
-                display: true,
-                text: 'Number of Entries'
-              },
-              beginAtZero: true,
-            }
-          },
-        }}
-      />
+          }}
+        />
+      </div>
     </div>
   );
 };
 
-export default TrialRoomLog;
+export default TrialRoomLog;  

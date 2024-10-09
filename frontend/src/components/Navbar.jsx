@@ -1,49 +1,76 @@
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+
+import { useNavigate } from "react-router-dom";
 import axiosInstance from '../utils/axiosInstance';
 import {removeToken} from '../utils/jwt'
+import { useState } from 'react';
+
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 function NavBar() {
 
+  const navigate = useNavigate();
+
+  const logout = () => {
+    const confirm = window.confirm("are you sure?");
+    if(confirm){
+      localStorage.removeItem('jwt'); 
+      navigate('/');
+    }else {
+        
+        window.location.href = window.location.href;
+    }
+    
+
+  };
+
+  const [isAdmin,setIsadmin] = useState(false);
+
   const handleLogout = async () => {
     try {
-      await axiosInstance.post('/logout'); // Call the logout endpoint
-      removeToken(); // Remove the token from local storage
-      // Optionally, redirect the user to the login page or update the UI
-      window.location.href = '/login'; // Redirect to login page
+      console.log("called")
+      await axiosInstance.post('/logout'); 
+      removeToken(); 
+      window.location.href = '/login'; // 
     } catch (error) {
       console.error('Error logging out:', error);
     }
   };
 
-
   return (
-    <Navbar expand="lg" className="bg-body-tertiary blue">
-      <Container>
-        <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="/home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="/inventory">Inventory</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="/add-user">
-                Add Users
-              </NavDropdown.Item>
-            </NavDropdown>
-            <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+
+    <nav class="navbar navbar-expand-sm bg-body-tertiary shadow">
+      <div class="container-fluid">
+        <a class="navbar-brand fs-4 badge bg-dark text-light" href="/home">Shoppers Tracker</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href='/home/insights'>Insights</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " href='/inventory' >Inventory</a>
+            </li>
+            <li className='nav-item'>
+              <a className={`nav-link ${isAdmin ? '' :'disabled'}`} href='register'>Add User</a>
+            </li>
+          </ul>
+          <span class="navbar-text">
+            <ul className='navbar-nav'>
+              <li>
+                <button onClick={()=>{logout()}}>
+                  Logout
+                </button>
+              </li>
+            </ul>
+            
+          </span>
+        </div>
+      </div>
+    </nav>
+
   );
 }
 

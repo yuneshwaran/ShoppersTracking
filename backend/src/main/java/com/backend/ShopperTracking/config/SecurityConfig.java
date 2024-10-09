@@ -39,7 +39,6 @@ public class SecurityConfig {
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(new BCryptPasswordEncoder(10));
 
-
         return provider;
     }
 
@@ -50,14 +49,14 @@ public class SecurityConfig {
 
         http.csrf(customizer -> customizer.disable())
             .authorizeHttpRequests(request -> request
-                    .requestMatchers("/login","/logout","/api/**").permitAll()
+                    .requestMatchers("/login","/logout").permitAll()
                     .requestMatchers("/register").hasRole("ADMIN")
                     .anyRequest().permitAll()
                     //.anyRequest().authenticated()
             )
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-            //    .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class );
+                //.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class );
 
             //logout handling
 //            http.logout(logout -> logout

@@ -24,3 +24,17 @@ PUT: 'http://localhost:8080/api/track/shelf/exit/{shelf-id}'
 body : 	{
   		"id":{log id}
 	}
+
+Inventory Log
+
+Insert inventory
+POST: 'http://localhost:8080/api/stock'
+body:    {
+        	"product":{"id":11},
+        	"quantity":3
+    	 }
+Update Quantity
+PUT: 'http://localhost:8080/api/stock/{product_id}'
+body:   {
+        "quantity":5
+   	}

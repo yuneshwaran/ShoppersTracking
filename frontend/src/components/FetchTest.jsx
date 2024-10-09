@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Login() {
+    
     const [username, setUsername] = useState('user');
     const [password, setPassword] = useState('123');
     const [data,setData] = useState('Hello  ');
@@ -41,7 +42,7 @@ function Login() {
 
     const forFetch = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/stock/3');
+            const response = await axios.get('http://localhost:8080/api/stock');
             console.log(response);
       
         } catch (error) {

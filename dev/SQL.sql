@@ -1,6 +1,5 @@
 
 --Table creation
-
 create table users (id int not null IDENTITY, username varchar(255) NOT NULL UNIQUE,password varchar(255) not null, role varchar(255),	PRIMARY KEY (id))
 
 create table brand (id int identity not null, description varchar(255), name varchar(255), shelf_id int, primary key (id));
@@ -67,5 +66,7 @@ grant select,insert,update,delete on trial_room_log to admin;
 
 select * from shelf_sensor_log;
 select * from trial_room_log;
+select * from inventory;
 
-delete from shelf_sensor_log where exit_time is null;
+
+delete from inventory where product_id is null;
