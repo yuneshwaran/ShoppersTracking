@@ -1,41 +1,29 @@
 
 import { useNavigate } from "react-router-dom";
-import axiosInstance from '../utils/axiosInstance';
-import {removeToken} from '../utils/jwt'
 import { useState } from 'react';
+import React from "react";
+import {} from './LoginPage'
 
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
 
 function NavBar() {
 
   const navigate = useNavigate();
 
+  const [jwt, setJWT] = useState(localStorage.getItem('jwt'))
+
   const logout = () => {
     const confirm = window.confirm("are you sure?");
     if(confirm){
       localStorage.removeItem('jwt'); 
+      setJWT(null)
+
       navigate('/');
     }else {
         
         window.location.href = window.location.href;
     }
-    
-
   };
 
-  const [isAdmin,setIsadmin] = useState(false);
-
-  const handleLogout = async () => {
-    try {
-      console.log("called")
-      await axiosInstance.post('/logout'); 
-      removeToken(); 
-      window.location.href = '/login'; // 
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
 
   return (
 
@@ -47,22 +35,27 @@ function NavBar() {
         </button>
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href='/home/insights'>Insights</a>
+          <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href='/home'>Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link " href='/inventory' >Inventory</a>
+              <a class="nav-link active" aria-current="page" href='/home/insights/shelf'>Insights</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " href='/home/inventory' >Inventory</a>
             </li>
             <li className='nav-item'>
-              <a className={`nav-link ${isAdmin ? '' :'disabled'}`} href='register'>Add User</a>
+              <a className="nav-link disabled" href='register'>Add User</a>
             </li>
           </ul>
           <span class="navbar-text">
             <ul className='navbar-nav'>
               <li>
-                <button onClick={()=>{logout()}}>
+                  
+                  <button onClick={()=>{logout()}}>
                   Logout
-                </button>
+                  </button> 
+               
               </li>
             </ul>
             

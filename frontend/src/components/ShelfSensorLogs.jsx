@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Form } from 'react-bootstrap';
 import dayjs from 'dayjs';
+import axios from 'axios';
 import '../App.css';
 import {
   Chart as ChartJS,
@@ -14,8 +15,8 @@ import {
   Legend,
   TimeScale,
 } from 'chart.js';
-import axios from 'axios';
-import axiosInstance from '../utils/axiosInstance';
+
+
 
 ChartJS.register(
   CategoryScale,
@@ -29,6 +30,7 @@ ChartJS.register(
 );
 
 const ShelfSensorLogs = () => {
+
   const moment = require('moment');
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
@@ -39,13 +41,16 @@ const ShelfSensorLogs = () => {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        // const response = axiosInstance.get('/api/track/shelf/logs')
-         const response = await axios.get('http://localhost:8080/api/track/shelf/logs');
+        const token = localStorage.getItem('jwt');
+        console.log('JWT Token:', token); // Log the token
+  
+        const response = await axios.get('http://localhost:8080/api/track/shelf/logs');
+  
         setLogs(response.data);
-
+  
         const uniqueShelves = Array.from(new Set(response.data.map(log => log.shelf.id)))
           .map(id => response.data.find(log => log.shelf.id === id).shelf);
-
+  
         setShelves(uniqueShelves);
         if (uniqueShelves.length > 0) {
           setSelectedShelf(uniqueShelves[0].id);
@@ -54,8 +59,15 @@ const ShelfSensorLogs = () => {
         console.error('Failed to fetch shelf logs:', error);
       }
     };
+  
     fetchLogs();
+
+    // Real-Time updates :)
+    const intervalId = setInterval(fetchLogs, 60000); 
+    return () => clearInterval(intervalId);
+
   }, []);
+  
 
   useEffect(() => {
     const now = dayjs();

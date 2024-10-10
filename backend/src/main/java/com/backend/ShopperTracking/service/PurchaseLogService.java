@@ -65,6 +65,6 @@ public class PurchaseLogService {
     }
 
     public List<PurchaseLog> getAll() {
-        return purchaseLogRepo.findAll();
+        return purchaseLogRepo.findAllPurchses();
     }
 }
