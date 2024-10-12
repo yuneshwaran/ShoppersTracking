@@ -15,7 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 @Configuration
@@ -48,8 +50,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(customizer -> customizer.disable())
-            .authorizeHttpRequests(request -> request
-                    .requestMatchers("/login","/logout","/api/**").permitAll()
+
+                .cors(Customizer.withDefaults())
+                .authorizeHttpRequests(request -> request
+                    .requestMatchers("/login","/logout").permitAll()
                     .requestMatchers("/register").hasRole("ADMIN")
                     //.anyRequest().permitAll()
                     .anyRequest().authenticated()
@@ -57,15 +61,6 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class );
-
-            //logout handling
-//            http.logout(logout -> logout
-//                        .logoutUrl("/logout")
-//                        .logoutSuccessUrl("/login")
-//                        .invalidateHttpSession(true)
-//                        .clearAuthentication(true)
-//                        .permitAll());
-
 
         return http.build();
     }
@@ -75,16 +70,19 @@ public class SecurityConfig {
 
         return config.getAuthenticationManager();
     }
-//
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//
-//
-//        registry.addResourceHandler("/css/**")
-//                .addResourceLocations("/css/");
-//
-//        registry.addResourceHandler("/js/**")
-//                .addResourceLocations("js/");
-//    }
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:3000")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
+            }
+        };
+    }
+
 
 }

@@ -1,91 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Form } from 'react-bootstrap';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import '../App.css';
-
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const TrialRoomLog = () => {
+  
   const [trialLogs, setTrialLogs] = useState([]);
-  const [filteredLogs, setFilteredLogs] = useState([]);
   const [timeRange, setTimeRange] = useState('1week');
-  const [selectedProduct, setSelectedProduct] = useState();
+  const [selectedProduct, setSelectedProduct] = useState('All');
+  const token = localStorage.getItem('jwt');
 
-  const fetchLogs = () => {
-    axios.get('http://localhost:8080/api/track/trial/all')
-      .then(response => {
-        setTrialLogs(response.data);
-      })
+  const fetchLogs = useCallback(() => {
+    axios.get('http://localhost:8080/api/track/trial/all', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(response => setTrialLogs(response.data))
       .catch(error => console.error('Error fetching trial logs:', error));
-  };
+  }, [token]);
 
   useEffect(() => {
-
     fetchLogs();
-
-   //Real-time update :)
-    const intervalId = setInterval(fetchLogs, 60000); 
-
+    const intervalId = setInterval(fetchLogs, 60000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [fetchLogs]);
 
-  useEffect(() => {
-
-    let filteredData = filterLogsByTimeRange(trialLogs, timeRange);
-    
-    if (selectedProduct !== 'All') {
-      filteredData = filteredData.filter(log => log.product.name === selectedProduct);
-    }
-    setFilteredLogs(filteredData);
-  }, [timeRange, selectedProduct, trialLogs]);
-
-  const filterLogsByTimeRange = (logs, range) => {
+  const getFilteredLogs = () => {
     const now = dayjs();
-    let startDate;
+    let startDate = timeRange === '1week' ? now.subtract(7, 'days') : now.subtract(1, 'month');
 
-    if (range === '1week') {
-      startDate = now.subtract(7, 'days');
-    } else if (range === '1month') {
-      startDate = now.subtract(1, 'month');
-    } else {
-      return logs;
-    }
-
-    return logs.filter(log => dayjs(log.entryTime).isAfter(startDate));
+    return trialLogs
+      .filter(log => timeRange === 'all' || dayjs(log.entryTime).isAfter(startDate))
+      .filter(log => selectedProduct === 'All' || log.product.name === selectedProduct);
   };
 
   const groupLogsByDay = () => {
-    const groupedLogs = {};
-
-    filteredLogs.forEach(log => {
+    const grouped = getFilteredLogs().reduce((acc, log) => {
       const day = dayjs(log.entryTime).format('YYYY-MM-DD');
-      if (!groupedLogs[day]) {
-        groupedLogs[day] = 0;
-      }
-      groupedLogs[day] += 1;
-    });
-
-    return groupedLogs;
-  };
-
-  const chartData = () => {
-    const groupedLogs = groupLogsByDay();
-    const labels = Object.keys(groupedLogs);
-    const values = Object.values(groupedLogs);
+      acc[day] = (acc[day] || 0) + 1;
+      return acc;
+    }, {});
 
     return {
-      labels,
+      labels: Object.keys(grouped),
       datasets: [
         {
           label: 'Number of Entries',
-          data: values,
+          data: Object.values(grouped),
           backgroundColor: 'rgba(54, 162, 235, 0.6)',
           borderColor: 'rgba(54, 162, 235, 1)',
-          borderWidth: 1,
         }
       ]
     };
@@ -93,15 +61,13 @@ const TrialRoomLog = () => {
 
   const getUniqueProducts = () => {
     const products = trialLogs.map(log => log.product.name);
-    return [...new Set(products)];
+    return ['All', ...new Set(products)];
   };
 
   return (
-    <div className='container'>
-      <div>
-        <h2 className='badge text-light fs-4'>TrialRoom Logs</h2>
-      </div>
-  
+    <div className="container">
+      <h2 className="badge text-light fs-4">Trial Room Logs</h2>
+
       <div className='d-flex align-items-center mb-3'>
         <div className='container align-items-center'>
           <div className='text-light'>Time Frame</div>
@@ -131,30 +97,17 @@ const TrialRoomLog = () => {
           </Form.Select>
         </div>
       </div>
-  
-      <div className='row'>
-        <Bar
-          data={chartData()}
-          options={{
-            responsive: true,
-            scales: {
-              x: {
-                title: {
-                  display: true,
-                  text: 'Days'
-                }
-              },
-              y: {
-                title: {
-                  display: true,
-                  text: 'Number of Entries'
-                },
-                beginAtZero: true,
-              }
-            },
-          }}
-        />
-      </div>
+
+      <Bar
+        data={groupLogsByDay()}
+        options={{
+          responsive: true,
+          scales: {
+            x: { title: { display: true, text: 'Days' } },
+            y: { title: { display: true, text: 'Number of Entries' }, beginAtZero: true }
+          }
+        }}
+      />
     </div>
   );
 };

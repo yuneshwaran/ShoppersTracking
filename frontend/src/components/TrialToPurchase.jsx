@@ -1,191 +1,164 @@
 import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import axios from 'axios';
 import { Form } from 'react-bootstrap';
-import './Styles.css';
-
-// Register necessary components for the Bar chart
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+import axios from 'axios';
+import './Styles.css'; 
 
 const TrialToPurchase = () => {
+  
   const [trialLogs, setTrialLogs] = useState([]);
   const [purchaseLogs, setPurchaseLogs] = useState([]);
   const [chartData, setChartData] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState('All');
-  const [brands, setBrands] = useState([]);
+  const [brands, setBrands] = useState(['All']);
   const [products, setProducts] = useState([]);
-
-  // useEffect(() => {
-    useEffect(() => {
-      const fetchLogs = () => {
-        // Fetch trial logs
-        axios.get('http://localhost:8080/api/track/trial/all')
-          .then(response => {
-            setTrialLogs(response.data);
-            const uniqueBrands = Array.from(new Set(response.data.map(log => log.product.brand.name)));
-            setBrands(['All', ...uniqueBrands]);
-          })
-          .catch(error => console.error('Error fetching trial logs:', error));
-    
-        // Fetch purchase logs
-        axios.get('http://localhost:8080/api/track/purchase')
-          .then(response => {
-            setPurchaseLogs(response.data);
-          })
-          .catch(error => console.error('Error fetching purchase logs:', error));
-      };
-    
-      fetchLogs(); // Initial fetch
-    
-      // Real-Time updates :)
-      const intervalId = setInterval(fetchLogs, 60000);
-    
-      // Clean up the interval on component unmount
-      return () => clearInterval(intervalId);
-    }, []);
+  const token = localStorage.getItem('jwt');  
 
 
   useEffect(() => {
+    const fetchLogs = async () => {
+  
+      try {
+        const trialResponse = await axios.get('http://localhost:8080/api/track/trial/all', {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+          },
+        });
+        
+        const purchaseResponse = await axios.get('http://localhost:8080/api/track/purchase', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setTrialLogs(trialResponse.data);
+        setPurchaseLogs(purchaseResponse.data);
+
+        const brandList = ['All', ...new Set(trialResponse.data.map(log => log.product.brand.name))];
+        setBrands(brandList);
+        
+      } catch (error) {
+        console.error('Error fetching logs', error);
+      }
+    };
+
+    fetchLogs();
+  }, [token]);
+
+  useEffect(() => {
     if (selectedBrand !== 'All') {
-      const uniqueProducts = Array.from(new Set(trialLogs
+      const filteredProducts = trialLogs
         .filter(log => log.product.brand.name === selectedBrand)
-        .map(log => log.product.name)));
-      setProducts([ ...uniqueProducts]);
+        .map(log => log.product.name);
+
+      setProducts([ ...new Set(filteredProducts)]);
     } else {
       setProducts([]);
     }
   }, [selectedBrand, trialLogs]);
 
+
   useEffect(() => {
-    if (trialLogs.length > 0 && purchaseLogs.length > 0) {
-      const productData = {};
+    const productData = {};
 
-      const filteredTrialLogs = selectedBrand === 'All' ? trialLogs : trialLogs.filter(log => log.product.brand.name === selectedBrand);
-      const filteredPurchaseLogs = selectedBrand === 'All' ? purchaseLogs : purchaseLogs.filter(log => log.product.brand.name === selectedBrand);
+    const filteredTrials = selectedBrand === 'All' ? 
+        trialLogs : 
+        trialLogs.filter(log => log.product.brand.name === selectedBrand);
 
-      const finalTrialLogs = selectedProduct === 'All' ? filteredTrialLogs : filteredTrialLogs.filter(log => log.product.name === selectedProduct);
-      const finalPurchaseLogs = selectedProduct === 'All' ? filteredPurchaseLogs : filteredPurchaseLogs.filter(log => log.product.name === selectedProduct);
+    const filteredPurchases = selectedBrand === 'All' ? 
+        purchaseLogs : 
+        purchaseLogs.filter(log => log.product.brand.name === selectedBrand);
 
-      finalTrialLogs.forEach(log => {
-        const productName = log.product.name;
-        if (!productData[productName]) {
-          productData[productName] = { trials: 0, purchases: 0 };
-        }
-        productData[productName].trials += 1;
-      });
+    const finalTrials = selectedProduct === 'All' ? filteredTrials : filteredTrials.filter(log => log.product.name === selectedProduct);
+    const finalPurchases = selectedProduct === 'All' ? filteredPurchases : filteredPurchases.filter(log => log.product.name === selectedProduct);
 
-      finalPurchaseLogs.forEach(log => {
-        const productName = log.product.name;
-        if (!productData[productName]) {
-          productData[productName] = { trials: 0, purchases: 0 };
-        }
-        productData[productName].purchases += 1;
-      });
+    finalTrials.forEach(log => {
+      const productName = log.product.name;
+      if (!productData[productName]) {
+        productData[productName] = { trials: 0, purchases: 0 };
+      }
+      productData[productName].trials += 1;
+    });
 
-      const productNames = Object.keys(productData);
-      const trialsData = productNames.map(name => productData[name].trials);
-      const purchasesData = productNames.map(name => productData[name].purchases);
+    finalPurchases.forEach(log => {
+      const productName = log.product.name;
+      if (!productData[productName]) {
+        productData[productName] = { trials: 0, purchases: 0 };
+      }
+      productData[productName].purchases += 1;
+    });
 
-      setChartData({
-        labels: productNames,
-        datasets: [
-          {
-            label: 'Trials',
-            data: trialsData,
-            backgroundColor: 'rgba(255, 99, 132, 0.6)', 
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1,
-          },
-          {
-            label: 'Purchases',
-            data: purchasesData,
-            backgroundColor: 'rgba(54, 162, 235, 0.6)', 
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1,
-          },
-        ],
-      });
-    }
+    const productNames = Object.keys(productData);
+    const trialsData = productNames.map(name => productData[name].trials);
+    const purchasesData = productNames.map(name => productData[name].purchases);
+
+    setChartData({
+      labels: productNames,
+      datasets: [
+        {
+          label: 'Trials',
+          data: trialsData,
+          backgroundColor: 'rgba(255, 99, 132, 0.6)', 
+        },
+        {
+          label: 'Purchases',
+          data: purchasesData,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)', 
+        },
+      ],
+    });
   }, [trialLogs, purchaseLogs, selectedBrand, selectedProduct]);
 
   return (
     <div className='container'>
-      {/* Title */}
-      <div className='mb-3'>
-        <h2 className='badge text-light fs-4'>Trials:Purchase</h2>
-      </div>
+      <h2 className='badge text-light fs-4'>Trials:Purchase</h2>
 
-      {/* Selectors Row */}
       <div className='d-flex align-items-center mb-4'>
-        {/* Brand Selector */}
         <div className='container align-items-center'>
           <div className='text-light'>Select Brand: </div>
           <Form.Select
-            id="brand-select"
-            className='w-auto me-3'
             value={selectedBrand}
-            onChange={e => {
+            onChange={(e) => { 
               setSelectedBrand(e.target.value);
               setSelectedProduct('All');
             }}
           >
-            {brands.map(brand => (
-              <option key={brand} value={brand}>
-                {brand}
-              </option>
+            {brands.map((brand) => (
+              <option key={brand} value={brand}>{brand}</option>
             ))}
           </Form.Select>
         </div>
 
-        {/* Product Selector */}
         <div className='container align-items-center'>
           <div className='text-light'>Select Product: </div>
           <Form.Select
-            id="product-select"
-            className='w-auto'
             value={selectedProduct}
-            onChange={e => setSelectedProduct(e.target.value)}
+            onChange={(e) => setSelectedProduct(e.target.value)}
+            disabled={products.length === 0}
           >
             <option value="All">All</option>
             {products.map(product => (
-              <option key={product} value={product}>
-                {product}
-              </option>
+              <option key={product} value={product}>{product}</option>
             ))}
           </Form.Select>
         </div>
       </div>
 
-      {/* Bar Chart */}
-      <div className='row'>
-        {chartData ? (
-          <Bar
-            data={chartData}
-            options={{
-              responsive: true,
-              scales: {
-                x: {
-                  title: {
-                    display: true,
-                    text: 'Products'
-                  }
-                },
-                y: {
-                  title: {
-                    display: true,
-                    text: 'Number of Trials/Purchases'
-                  },
-                  beginAtZero: true,
-                }
-              },
-            }}
-          />
-        ) : (
-          <p>Loading chart...</p>
-        )}
-      </div>
+      {chartData ? (
+        <Bar
+          data={chartData}
+          options={{
+            responsive: true,
+            scales: {
+              x: { title: { display: true, text: 'Products' } },
+              y: { title: { display: true, text: 'Number of Trials/Purchases' }, beginAtZero: true },
+            },
+          }}
+        />
+      ) : (
+        <p>Loading chart...</p>
+      )}
     </div>
   );
 };

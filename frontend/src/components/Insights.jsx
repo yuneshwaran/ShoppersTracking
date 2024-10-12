@@ -7,11 +7,10 @@ import PurchaseLogs from "./PurchaseLogs";
 
 export const Insights = () => {
   return (
-    <div className="container border " style={{ maxWidth: "50%", overflowX: "hidden" }}>
+    <div className="container border" style={{ maxWidth: "50%", overflowX: "hidden" }}>
       <div>
         
-        <a>Hello</a>
-      <Nav variant="tabs" className="flex-grow-1 justify-content-between" defaultActiveKey="/chart/*">
+      <Nav variant="tabs" className="flex-grow-1 justify-content-between m-2" defaultActiveKey="/chart/*">
         <Nav.Item>
           <Nav.Link as={NavLink} to="shelf" className={({ isActive }) => (isActive ? "active" : "")}>
             Shelf Sensor Logs

@@ -6,16 +6,25 @@ import dayjs from 'dayjs';
 const PurchaseLogList = () => {
   const [purchaseLogs, setPurchaseLogs] = useState([]);
 
-  useEffect(() => {
-    const fetchPurchaseLogs = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/api/track/purchase');
-        setPurchaseLogs(response.data);
-      } catch (error) {
-        console.error('Error fetching purchase logs:', error);
-      }
-    };
+  const fetchPurchaseLogs = async () => {
 
+    try {
+      const token = localStorage.getItem('jwt');
+  
+      const response = await axios.get('http://localhost:8080/api/track/purchase', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      setPurchaseLogs(response.data); 
+    } catch (error) {
+      console.error('Error fetching purchase logs:', error);
+    }
+  };
+  
+
+  useEffect(() => {
     fetchPurchaseLogs();
 
     // Real-Time updates :)
@@ -25,6 +34,8 @@ const PurchaseLogList = () => {
   }, []);
 
   return (
+    <div className='container'>
+
     <div className="purchase-log-list-container">
       <h3 className="text-light mb-3">Purchase Log</h3>
 
@@ -34,6 +45,7 @@ const PurchaseLogList = () => {
             <tr>
               <th>Date</th>
               <th>Product Name</th>
+              <th>Quantity</th>
               <th>Total Price</th>
             </tr>
           </thead>
@@ -42,12 +54,14 @@ const PurchaseLogList = () => {
               <tr key={log.id}>
                 <td>{dayjs(log.purchaseDate).format('DD-MM-YYYY')}</td>
                 <td>{log.product.name}</td>
+                <td>{log.quantity}</td>
                 <td>{log.totalPrice}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+    </div>
     </div>
   );
 };

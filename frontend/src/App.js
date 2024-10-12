@@ -1,23 +1,43 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'; // Add Navigate here
 import './App.css';
-
-
-import MainPage from './components/MainPage';
-import Inventory from './components/Inventory';
 import LoginPage from './components/LoginPage';
+import { LoginProvider, useLogin } from './utils/LoginContext';
+import NavBar from './components/Navbar';
+import { Insights } from './components/Insights';
+import Inventory from './components/Inventory';
+import Home from './components/Home';
+
+// Protected Route for routes that require login
+function ProtectedRoute({ children }) {
+  const { isLoggedIn } = useLogin();
+  return isLoggedIn() ? children : <Navigate to="/login" />; // Redirect to login if not logged in
+}
+
+function MainPage() {
+  return (
+    <div>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Home />} /> 
+        <Route path="/insights/*" element={<ProtectedRoute><Insights /></ProtectedRoute>} />
+        <Route path="/inventory/*" element={<ProtectedRoute><Inventory /></ProtectedRoute>} />
+        <Route path="/logs/*"  />
+      </Routes>
+    </div>
+  );
+}
 
 function App() {
   return (
-    <BrowserRouter>
-      
-      <Routes>
-        <Route path='/' element={<LoginPage/>}></Route>
-        <Route path='/home/*' element={<MainPage/>}></Route>
-        {/* <Route path='/inventory' element={<Inventory/>}></Route> */}
-        {/* <Route path='/product/:id' element={<Product/>}></Route> */}
-
-      </Routes>
-    </BrowserRouter>
+    <LoginProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} /> 
+          <Route path="/*" element={<MainPage />} />
+        </Routes>
+      </BrowserRouter>
+    </LoginProvider>
   );
 }
 

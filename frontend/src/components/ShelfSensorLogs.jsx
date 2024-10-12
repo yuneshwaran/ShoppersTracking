@@ -16,22 +16,10 @@ import {
   TimeScale,
 } from 'chart.js';
 
-
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  TimeScale
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
 
 const ShelfSensorLogs = () => {
-
-  const moment = require('moment');
+  
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [timeRange, setTimeRange] = useState('1m');
@@ -41,109 +29,94 @@ const ShelfSensorLogs = () => {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const token = localStorage.getItem('jwt');
-        console.log('JWT Token:', token); // Log the token
-  
-        const response = await axios.get('http://localhost:8080/api/track/shelf/logs');
-  
+        const token = localStorage.getItem('jwt');  
+        const response = await axios.get('http://localhost:8080/api/track/shelf/logs',
+         {
+          headers:{
+            Authorization:`Bearer ${token}`,
+          },
+         });
         setLogs(response.data);
-  
-        const uniqueShelves = Array.from(new Set(response.data.map(log => log.shelf.id)))
+
+        const uniqueShelves = [...new Set(response.data.map(log => log.shelf.id))]
           .map(id => response.data.find(log => log.shelf.id === id).shelf);
-  
+        
         setShelves(uniqueShelves);
-        if (uniqueShelves.length > 0) {
+        if (!selectedShelf && uniqueShelves.length > 0) {
           setSelectedShelf(uniqueShelves[0].id);
         }
       } catch (error) {
         console.error('Failed to fetch shelf logs:', error);
       }
     };
-  
+
     fetchLogs();
-
-    // Real-Time updates :)
     const intervalId = setInterval(fetchLogs, 60000); 
-    return () => clearInterval(intervalId);
 
-  }, []);
-  
+    return () => clearInterval(intervalId);
+  }, [selectedShelf]);
 
   useEffect(() => {
     const now = dayjs();
-    let filteredData = logs.filter(log => log.shelf.id === selectedShelf);
-
-    switch (timeRange) {
-      case '1m':
-        filteredData = filteredData.filter(log => dayjs(log.entryTime).isAfter(now.subtract(1, 'month')));
-        break;
-      case '3m':
-        filteredData = filteredData.filter(log => dayjs(log.entryTime).isAfter(now.subtract(3, 'months')));
-        break;
-      case '6m':
-        filteredData = filteredData.filter(log => dayjs(log.entryTime).isAfter(now.subtract(6, 'months')));
-        break;
-      default:
-        filteredData = filteredData;
-    }
+    const filteredData = logs.filter(log => 
+      log.shelf.id === selectedShelf && dayjs(log.entryTime).isAfter(now.subtract(
+        { '1m': 1, '3m': 3, '6m': 6 }[timeRange], 'months'))
+    );
 
     setFilteredLogs(filteredData);
   }, [logs, timeRange, selectedShelf]);
 
-    const data = {
-      labels: filteredLogs.map(log => dayjs(log.entryTime).format('YYYY-MM-DD')),
-      datasets: [
-        {
-          label: `Shelf: ${shelves.find(shelf => shelf.id === selectedShelf)?.name || ''} - Duration (mins)`,
-          data: filteredLogs.map(log => dayjs(log.exitTime).diff(dayjs(log.entryTime), 'minute')),
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        },
-      ],
+  const data = {
+    labels: filteredLogs.map(log => dayjs(log.entryTime).format('YYYY-MM-DD')),
+    datasets: [
+      {
+        label: `Shelf: ${shelves.find(shelf => shelf.id === selectedShelf)?.name || ''} - Duration (mins)`,
+        data: filteredLogs.map(log => dayjs(log.exitTime).diff(dayjs(log.entryTime), 'minute')),
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      },
+    ],
   };
 
   return (
     <div className='container'>
+      <h2 className='badge text-ligh fs-4'>Shelf Sensor Logs</h2>
+      
+      <div className='d-flex align-items-center text-align-center mb-3'>
+        <div className='container align-items-center'>
+          <div className='text-light'>Shelf name</div>
+          <Form.Select
+            className='me-2'
+            aria-label="Select Shelf"
+            onChange={(e) => setSelectedShelf(Number(e.target.value))}
+            value={selectedShelf}
+          >
+            {shelves.map(shelf => (
+              <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
+            ))}
+          </Form.Select>
+        </div>
 
-          <div>
-            <h2 className='badge text-ligh fs-4'>Shelf Sensor Logs</h2>
-          </div>
+        <div className='container align-items-center'>
+          <div className='text-light'>Time Frame</div>
+          <Form.Select
+            aria-label="Time range"
+            onChange={(e) => setTimeRange(e.target.value)}
+            value={timeRange}
+          >
+            <option value="1m">Last 1 Month</option>
+            <option value="3m">Last 3 Months</option>
+            <option value="6m">Last 6 Months</option>
+            <option value="all">All Time</option>
+          </Form.Select>
+        </div>
+      </div>
 
-          <div className='d-flex align-items-center text-align-center mb-3'>
-              <div className='container align-items-center'>
-                    <div className='text-light'>Shelf name</div>
-
-                    <Form.Select
-                      className='me-2'
-                      aria-label="Select Shelf"
-                      onChange={(e) => setSelectedShelf(Number(e.target.value))}
-                      value={selectedShelf}>
-                      {shelves.map(shelf => (
-                    <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
-                      ))}
-                    </Form.Select>
-              </div>
-
-              <div className='container align-items-center'>
-                      
-                    <div className='text-light'>Time Frame</div>
-                    
-                    <Form.Select
-                      aria-label="Time range"
-                      onChange={(e) => setTimeRange(e.target.value)}>
-                        <option value="1m">Last 1 Month</option>
-                        <option value="3m">Last 3 Months</option>
-                        <option value="6m">Last 6 Months</option>
-                        <option value="all">All Time</option>
-                    </Form.Select>
-                </div>
-          </div>      
-
-          <div className='row'>
-            <Line data={data} />
-          </div>
+      <div className='row'>
+        <Line data={data} />
+      </div>
     </div>
   );
-
 }
+
 export default ShelfSensorLogs;
