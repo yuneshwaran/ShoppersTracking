@@ -10,12 +10,10 @@ const NavBar = () => {
   const navigate = useNavigate();
 
 
-  const [showModal, setShowModal] = useState(false); // State to manage modal visibility
-
-  // Function to handle opening the modal
+  const [showModal, setShowModal] = useState(false);  
+ 
   const handleShow = () => setShowModal(true);
-
-  // Function to handle closing the modal
+ 
   const handleClose = () => setShowModal(false);
 
   const handleLogout = () => {

@@ -8,6 +8,7 @@
     margin: 0 10px;
   }
   
+  /* carousel */
   .home-carousel {
     width: 100%;
     max-width: 1400px;
@@ -32,14 +33,6 @@
     text-align: center;
   }
   
-  .footer {
-    max-width: 1400px;
-    margin: 20px auto;
-    padding: 10px;
-    background-color: #f1f1f1;
-    text-align: center;
-  }
-  
   h3{
     color: #fff;
     text-shadow: #000 5px 5px 5px ;
@@ -48,3 +41,40 @@
     text-transform: capitalize;
 
   } 
+
+
+  /* about */
+
+  .card {
+    background-color: #f8f9fa; 
+    border-radius: 10px;  
+}
+
+.title {
+    font-family: 'Arial', sans-serif;
+    font-size: 2.5rem; 
+    color: #343a40; 
+}
+
+.description,
+.conclusion
+ {
+    font-family: 'Helvetica', sans-serif;
+    font-size: 1.2rem;  
+    color: #495057; 
+}
+
+.subheading {
+    font-family: 'Arial', sans-serif;
+    font-size: 2rem;  
+}
+
+.links {
+    color: #f8f9fa;
+    text-decoration: none; 
+    font-weight: 500;
+}
+
+.links:hover {
+    text-decoration: underline;  
+}

@@ -3,7 +3,6 @@ import { Line } from 'react-chartjs-2';
 import { Form } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import axios from 'axios';
-import './Charts.css';
 import {
   Chart as ChartJS,
   CategoryScale,

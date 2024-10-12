@@ -55,6 +55,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                     .requestMatchers("/login","/logout").permitAll()
                     .requestMatchers("/register").hasRole("ADMIN")
+                        .requestMatchers("/api/track/**").permitAll()
                     //.anyRequest().permitAll()
                     .anyRequest().authenticated()
             )

@@ -9,10 +9,9 @@ import Inventory from './components/Inventory';
 import Home from './components/Home';
 import Logs from './components/Logs';
 
-// Protected Route for routes that require login
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useLogin();
-  return isLoggedIn() ? children : <Navigate to="/login" />; // Redirect to login if not logged in
+  return isLoggedIn() ? children : <Navigate to="/login" />; 
 }
 
 function MainPage() {
