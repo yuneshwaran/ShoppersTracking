@@ -7,6 +7,7 @@ import NavBar from './components/Navbar';
 import { Insights } from './components/Insights';
 import Inventory from './components/Inventory';
 import Home from './components/Home';
+import Logs from './components/Logs';
 
 // Protected Route for routes that require login
 function ProtectedRoute({ children }) {
@@ -20,9 +21,9 @@ function MainPage() {
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} /> 
+        <Route path='/logs/*' element={<Logs/>}/>
         <Route path="/insights/*" element={<ProtectedRoute><Insights /></ProtectedRoute>} />
         <Route path="/inventory/*" element={<ProtectedRoute><Inventory /></ProtectedRoute>} />
-        <Route path="/logs/*"  />
       </Routes>
     </div>
   );
@@ -35,6 +36,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} /> 
           <Route path="/*" element={<MainPage />} />
+          
         </Routes>
       </BrowserRouter>
     </LoginProvider>

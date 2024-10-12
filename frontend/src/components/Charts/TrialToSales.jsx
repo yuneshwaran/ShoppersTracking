@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Form } from 'react-bootstrap';
 import axios from 'axios';
-import './Styles.css'; 
+import './Charts.css';
 
 const TrialToPurchase = () => {
-  
+
   const [trialLogs, setTrialLogs] = useState([]);
   const [purchaseLogs, setPurchaseLogs] = useState([]);
   const [chartData, setChartData] = useState(null);
@@ -112,7 +112,7 @@ const TrialToPurchase = () => {
 
   return (
     <div className='container'>
-      <h2 className='badge text-light fs-4'>Trials:Purchase</h2>
+      <h2 className='badge text-light fs-4'>Trials to Sales Ratio</h2>
 
       <div className='d-flex align-items-center mb-4'>
         <div className='container align-items-center'>

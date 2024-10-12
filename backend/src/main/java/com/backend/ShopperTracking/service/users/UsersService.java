@@ -22,12 +22,20 @@ public class UsersService {
         if(user.getRole().contains("admin")){
             user.setRole("ROLE_ADMIN");
         }
-        else if(user.getRole().contains("user")){
+        else{
             user.setRole("ROLE_USER");
         }
 
         repo.save(user);
         return "Saved";
+    }
+    public String updateUser (Users user){
+
+        Users newUser = repo.getUserByUsername(user.getUsername());
+        newUser.setPassword(encoder.encode(user.getPassword()));
+        repo.save(newUser);
+
+        return "Updated";
     }
 
 }

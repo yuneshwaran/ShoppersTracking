@@ -3,7 +3,7 @@ import { Line } from 'react-chartjs-2';
 import { Form } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import axios from 'axios';
-import '../App.css';
+import './Charts.css';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -107,7 +107,6 @@ const ShelfSensorLogs = () => {
             <option value="1m">Last 1 Month</option>
             <option value="3m">Last 3 Months</option>
             <option value="6m">Last 6 Months</option>
-            <option value="all">All Time</option>
           </Form.Select>
         </div>
       </div>

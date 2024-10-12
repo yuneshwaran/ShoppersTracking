@@ -1,18 +1,1 @@
 /* App.css */
-.container {
-  height: 100%; 
-  display: flex;
-  flex-direction: column;
-}
-
-.row {
-  flex-grow: 1; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.chart-container {
-  width: 100%;
-  height: 100%;
-}

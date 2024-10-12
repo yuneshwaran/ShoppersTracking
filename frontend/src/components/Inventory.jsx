@@ -4,13 +4,14 @@ import { FaEdit, FaSave, FaPlus } from "react-icons/fa";
 import moment from "moment";
 
 function Inventory() {
+  
   const [products, setProducts] = useState([]);
   const [editProductId, setEditProductId] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({ id: "", name: "", quantity: "" });
   const [editQuantity, setEditQuantity] = useState({});
   const [error, setError] = useState("");
-  const [searchValue, setSearchValue] = useState(""); // Separate search input
+  const [searchValue, setSearchValue] = useState("");
   const token = localStorage.getItem("jwt");
 
   const fetchProducts = useCallback(async () => {

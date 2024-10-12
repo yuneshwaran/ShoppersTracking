@@ -19,7 +19,6 @@ export const LoginProvider = ({ children }) => {
     const typeUser = decodedToken.role;
 
     if (typeUser && typeUser.includes('ROLE_ADMIN')) {
-      console.log('Admin access: true');
       setAdmin(true);
     } else {
       setAdmin(false);

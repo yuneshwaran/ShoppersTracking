@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLogin } from '../utils/LoginContext';
@@ -5,6 +6,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const LoginPage = () => {
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -30,12 +32,6 @@ const LoginPage = () => {
       login(jwt);
       navigate('/', { replace: true });
 
-      setTimeout(() => {
-        const confirmed = window.confirm('Session Timeout.Login to continue');
-        if (confirmed) {
-          navigate('/login');
-        } 
-      }, 3600000);
 
     } catch (error) {
       console.error('Login error:', error);

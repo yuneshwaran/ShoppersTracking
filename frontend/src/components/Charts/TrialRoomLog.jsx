@@ -35,7 +35,7 @@ const TrialRoomLog = () => {
     let startDate = timeRange === '1week' ? now.subtract(7, 'days') : now.subtract(1, 'month');
 
     return trialLogs
-      .filter(log => timeRange === 'all' || dayjs(log.entryTime).isAfter(startDate))
+      .filter(log => dayjs(log.entryTime).isAfter(startDate))
       .filter(log => selectedProduct === 'All' || log.product.name === selectedProduct);
   };
 
@@ -79,7 +79,6 @@ const TrialRoomLog = () => {
           >
             <option value="1week">Last 1 Week</option>
             <option value="1month">Last 1 Month</option>
-            <option value="all">All Time</option>
           </Form.Select>
         </div>
 

@@ -1,28 +1,37 @@
 import React from 'react';
 import { useLogin } from '../utils/LoginContext';
-import { useNavigate } from 'react-router-dom';
-import { NavLink } from 'react-router-dom';
-import { Navbar, Nav, Button ,NavDropdown } from 'react-bootstrap';
+import { useNavigate,NavLink } from 'react-router-dom';
+import { useState } from 'react';
+import { Navbar, Nav, Button, NavDropdown } from 'react-bootstrap';
+import Password from '../utils/UpdatePass';
 
 const NavBar = () => {
-  const { logout, isLoggedIn } = useLogin();
+  const { logout, isLoggedIn, admin } = useLogin();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
 
-    const confirm = window.confirm("  You will be logged out\nDo you want to continue?");
-    if(confirm){
+  const [showModal, setShowModal] = useState(false); // State to manage modal visibility
+
+  // Function to handle opening the modal
+  const handleShow = () => setShowModal(true);
+
+  // Function to handle closing the modal
+  const handleClose = () => setShowModal(false);
+
+  const handleLogout = () => {
+    const confirm = window.confirm("You will be logged out\nDo you want to continue?");
+    if (confirm) {
       logout();
-    navigate('/');
-    } 
+      navigate('/');
+    }
   };
 
   return (
-    <Navbar expand="sm" bg="light" className="shadow mx-2" style={{color: 'black'}}>
+    <Navbar expand="sm" bg="light" className="shadow mx-2" style={{ color: 'black' }}>
       <Navbar.Brand href="/" className="fs-4 badge bg-dark text-light">Shoppers Tracker</Navbar.Brand>
       <Navbar.Toggle aria-controls="navbar-nav" />
       <Navbar.Collapse id="navbar-nav">
-        <Nav className="me-auto ">
+        <Nav className="me-auto">
 
           {isLoggedIn() && (
             <>
@@ -37,31 +46,41 @@ const NavBar = () => {
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link as={NavLink} to="/logs" className={({ isActive }) => isActive ? 'active' : ''}>
+                <Nav.Link as={NavLink} to="/logs/shelf" className={({ isActive }) => isActive ? 'active' : ''}>
                   Logs
                 </Nav.Link>
               </Nav.Item>
-              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown>
+              <Nav.Item>
+                <Nav.Link className={({ isActive }) => isActive ? 'active' : ''} onClick={handleShow}>
+                  Update Password
+                </Nav.Link>
+              </Nav.Item>
+
+              {admin && (
+                <NavDropdown title="Admin Actions" id="basic-nav-dropdown">
+                  <NavDropdown.Item href="/add/product">Add Product</NavDropdown.Item>
+                  <NavDropdown.Item href="/add/product">Add Brand</NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="/add/user">Add User</NavDropdown.Item>
+                  <NavDropdown.Item onClick={handleShow}>Update Password</NavDropdown.Item>
+                </NavDropdown>
+                
+              )}
+              <Password showModal={showModal} handleClose={handleClose} />
             </>
           )}
         </Nav>
+
         {isLoggedIn() ? (
-          <Button onClick={handleLogout} variant="danger">
+          <Button onClick={handleLogout} variant="danger" >
             Logout
           </Button>
         ) : (
-          <Button onClick={() => navigate('/login')} variant="primary">
+          <Button onClick={() => navigate('/login')} variant="primary" >
             Login
           </Button>
         )}
+        <Password showModal={showModal} handleClose={handleClose} />
       </Navbar.Collapse>
     </Navbar>
   );
