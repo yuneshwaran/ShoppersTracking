@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "brand")
 @Getter
 @Setter
 public class Brand {
@@ -30,6 +28,7 @@ public class Brand {
 
     @OneToMany(mappedBy = "brand")
     @JsonIgnore
-    private List<Product> products = new ArrayList<>();
+    private List<Product> products;
+
 
 }

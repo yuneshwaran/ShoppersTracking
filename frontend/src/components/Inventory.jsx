@@ -43,8 +43,7 @@ function Inventory() {
     fetchProducts();
   }, [fetchProducts]);
 
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
+  const handleSearchChange = (value) => {
     setSearchValue(value);
     const filtered = value
       ? products.filter(

@@ -4,6 +4,8 @@ package com.backend.ShopperTracking.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +28,11 @@ public class Shelf {
     @OneToOne(cascade = CascadeType.ALL,mappedBy = "shelf")
     @JsonIgnore
     private ShelfSensor sensor;
+
+    @OneToMany(mappedBy = "shelf")
+    @JsonIgnore
+    private List<Product> products;
+
 
     @OneToMany(mappedBy = "shelf")
     @JsonIgnore

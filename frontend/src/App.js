@@ -8,6 +8,7 @@ import { Insights } from './components/Insights';
 import Inventory from './components/Inventory';
 import Home from './components/Home';
 import Logs from './components/Logs';
+import Entity from './components/Entity';
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useLogin();
@@ -21,6 +22,7 @@ function MainPage() {
       <Routes>
         <Route path="/" element={<Home />} /> 
         <Route path='/logs/*' element={<Logs/>}/>
+        <Route path='/entity/*' element={<Entity/>}/>
         <Route path="/insights/*" element={<ProtectedRoute><Insights /></ProtectedRoute>} />
         <Route path="/inventory/*" element={<ProtectedRoute><Inventory /></ProtectedRoute>} />
       </Routes>

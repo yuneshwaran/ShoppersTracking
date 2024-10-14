@@ -20,6 +20,7 @@ const NavBar = () => {
     const confirm = window.confirm("You will be logged out\nDo you want to continue?");
     if (confirm) {
       logout();
+      alert("Logout Successful!!!")
       navigate('/');
     }
   };
@@ -48,14 +49,15 @@ const NavBar = () => {
                   Logs
                 </Nav.Link>
               </Nav.Item>
-              {/* <Nav.Item>
-                <Nav.Link className={({ isActive }) => isActive ? 'active' : ''} onClick={handleShow}>
-                  Update Password
+              <Nav.Item>
+                <Nav.Link as={NavLink} to="/entity/shelf" className={({ isActive }) => (isActive ? 'active' : '')} >
+                  Entities
                 </Nav.Link>
-              </Nav.Item> */}
+              </Nav.Item>
+
 
               
-                <NavDropdown title="Admin Actions" id="basic-nav-dropdown" className=''>
+                <NavDropdown title="User Actions" id="basic-nav-dropdown" className=''>
                   <NavDropdown.Item disabled href="/add/product">Add Product</NavDropdown.Item>
                   <NavDropdown.Item disabled href="/add/product">Add Brand</NavDropdown.Item>
                   <NavDropdown.Divider />

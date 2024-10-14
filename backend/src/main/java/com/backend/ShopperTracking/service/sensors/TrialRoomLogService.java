@@ -49,7 +49,7 @@ public class TrialRoomLogService {
 
     // Get all trial room logs
     public List<TrialRoomLog> getAllTrialRoomLogs() {
-        return trialRoomLogRepository.findAll();
+        return trialRoomLogRepository.findAllDesc();
     }
 
 }

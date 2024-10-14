@@ -13,7 +13,7 @@ function Home() {
         <Carousel.Item interval={1500}>
           <img src={shelf} alt="Hanger" className="carousel-image" />
           <Carousel.Caption>
-            <h3>Track user interactions with product. </h3>
+            <h3>Track user interactions with products. </h3>
           
           </Carousel.Caption>
         </Carousel.Item>
@@ -21,7 +21,7 @@ function Home() {
         <Carousel.Item interval={1500}>
           <img src={storage} alt="Storage" className="carousel-image" />
           <Carousel.Caption className='shadow'>
-            <h3>Inventory management with purchase logging.</h3>
+            <h3>Inventory management along with purchase logging.</h3>
             
           </Carousel.Caption>
         </Carousel.Item>

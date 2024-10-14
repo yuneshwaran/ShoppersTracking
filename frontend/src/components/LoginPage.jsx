@@ -28,6 +28,7 @@ const LoginPage = () => {
 
       const jwt = await response.text();
       login(jwt);
+      alert("Login Successful!!!")
       navigate('/', { replace: true });
     } catch (error) {
       console.error('Login error:', error);
@@ -40,7 +41,7 @@ const LoginPage = () => {
       <div className="background-blur"></div>
       <div className="card p-4" style={{ width: '400px' }}>
         <button className='btn me-auto' onClick={() => navigate('/')}><FaArrowLeft /></button>
-        <h2 className="text-center mb-4">Login</h2>
+        <h2 className="text-center mb-4">Welcome Back</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group mb-3">
             <label htmlFor="username">Username</label>
@@ -65,7 +66,7 @@ const LoginPage = () => {
             />
           </div>
           {error && <div className="alert alert-danger" role="alert">{error}</div>}
-          <button type="submit" className="btn btn-primary w-100">Login</button>
+          <button type="submit" className="btn btn-primary w-100">Sign-in</button>
         </form>
       </div>
     </div>

@@ -29,6 +29,9 @@ public class Product {
     @ManyToOne
     private Brand brand;
 
+    @ManyToOne
+    private Shelf shelf;
+
     @OneToMany(mappedBy = "product")
     @JsonIgnore
     private List<HangerSensor> hangerSensor;

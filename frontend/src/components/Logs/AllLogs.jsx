@@ -14,6 +14,7 @@ export const ShelfSensorLogs = () => {
               Authorization: `Bearer ${token}`,
             },
           });
+
           setShelfLogs(response.data);
           
         } catch (error) {
@@ -45,7 +46,7 @@ export const ShelfSensorLogs = () => {
                   <td>{log.shelf.name}</td>
                   <td>{dayjs(log.entryTime).format('HH:mm')}</td>
                   <td>{log.exitTime ? dayjs(log.exitTime).format('HH:mm') : 'N/A'}</td>
-                  <td>{log.exitTime ? dayjs(log.exitTime).diff(dayjs(log.entryTime), 'minute') : 'In Progress'}</td>
+                  <td>{dayjs(log.exitTime).diff(dayjs(log.entryTime), 'minute')}</td>
                 </tr>
               ))}
             </tbody>
@@ -84,20 +85,18 @@ export const ShelfSensorLogs = () => {
             <thead>
               <tr>
                 <th>Date</th>
+                <th>TrialRoom id</th>
                 <th>Product Name</th>
-                <th>Trial Start Time</th>
-                <th>Trial End Time</th>
-                <th>Duration (mins)</th>
+                <th>Entry Time</th>
               </tr>
             </thead>
             <tbody>
               {trialRoomLogs.map((log) => (
                 <tr key={log.id}>
-                  <td>{dayjs(log.trialStartTime).format('DD-MM-YYYY')}</td>
+                  <td>{dayjs(log.entryTime).format('DD-MM-YYYY')}</td>
+                  <td>{log.trialRoom.id}</td> 
                   <td>{log.product.name}</td>
-                  <td>{dayjs(log.trialStartTime).format('HH:mm')}</td>
-                  <td>{log.trialEndTime ? dayjs(log.trialEndTime).format('HH:mm') : 'In Progress'}</td>
-                  <td>{log.trialEndTime ? dayjs(log.trialEndTime).diff(dayjs(log.trialStartTime), 'minute') : 'In Progress'}</td>
+                  <td>{dayjs(log.entryTime).format('HH:mm')}</td>
                 </tr>
               ))}
             </tbody>

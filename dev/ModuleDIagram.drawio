@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36" version="24.7.16">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36" version="24.7.17">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="1318" dy="511" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="880" dy="434" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -18,11 +18,11 @@
         <mxCell id="KbAVaOLCOC8fgSEtVhAz-5" value="Username&#xa;password" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=1;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;movable=1;resizable=1;deletable=1;editable=1;locked=0;connectable=1;" parent="KbAVaOLCOC8fgSEtVhAz-4" vertex="1">
           <mxGeometry y="30" width="150" height="54" as="geometry" />
         </mxCell>
-        <mxCell id="KbAVaOLCOC8fgSEtVhAz-9" value="Insights" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="148" y="50" width="120" height="60" as="geometry" />
+        <mxCell id="KbAVaOLCOC8fgSEtVhAz-9" value="Insights&lt;div&gt;ChartJs&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="128" y="40" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="KbAVaOLCOC8fgSEtVhAz-10" value="Details Page&lt;div&gt;Tracker details&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="458" y="50" width="120" height="60" as="geometry" />
+        <mxCell id="KbAVaOLCOC8fgSEtVhAz-10" value="Logs Page&lt;div&gt;Log details&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="458" y="40" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="KbAVaOLCOC8fgSEtVhAz-16" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="KbAVaOLCOC8fgSEtVhAz-4" target="KbAVaOLCOC8fgSEtVhAz-9" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -77,7 +77,7 @@
         <mxCell id="njP_B5CA0C5bg6Z4Q5IA-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="KbAVaOLCOC8fgSEtVhAz-33" target="KbAVaOLCOC8fgSEtVhAz-41" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="b3Wxb6O21fgit-A_NAcN-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="KbAVaOLCOC8fgSEtVhAz-33" target="b3Wxb6O21fgit-A_NAcN-0">
+        <mxCell id="b3Wxb6O21fgit-A_NAcN-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="KbAVaOLCOC8fgSEtVhAz-33" target="b3Wxb6O21fgit-A_NAcN-0" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="KbAVaOLCOC8fgSEtVhAz-33" value="&lt;div&gt;DAO Layer&lt;/div&gt;&lt;div&gt;(JPA Repo)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
@@ -103,7 +103,7 @@
             <mxPoint x="1" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="b3Wxb6O21fgit-A_NAcN-0" value="Models&lt;div&gt;(user,Customer&lt;/div&gt;&lt;div&gt;Shelf etc,.)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="b3Wxb6O21fgit-A_NAcN-0" value="Models&lt;div&gt;(User,Products&lt;/div&gt;&lt;div&gt;Shelf etc,.)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="478" y="430" width="100" height="59.94" as="geometry" />
         </mxCell>
       </root>

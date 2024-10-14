@@ -5,7 +5,6 @@ import com.backend.ShopperTracking.model.Product;
 import com.backend.ShopperTracking.repository.InventoryRepo;
 import com.backend.ShopperTracking.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

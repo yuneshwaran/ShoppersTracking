@@ -59,6 +59,7 @@ const TrialToPurchase = () => {
 
 
   useEffect(() => {
+
     const productData = {};
 
     const filteredTrials = selectedBrand === 'All' ? 
@@ -69,9 +70,15 @@ const TrialToPurchase = () => {
         purchaseLogs : 
         purchaseLogs.filter(log => log.product.brand.name === selectedBrand);
 
-    const finalTrials = selectedProduct === 'All' ? filteredTrials : filteredTrials.filter(log => log.product.name === selectedProduct);
-    const finalPurchases = selectedProduct === 'All' ? filteredPurchases : filteredPurchases.filter(log => log.product.name === selectedProduct);
+    const finalTrials = selectedProduct === 'All' ? 
+        filteredTrials : 
+        filteredTrials.filter(log => log.product.name === selectedProduct);
 
+    const finalPurchases = selectedProduct === 'All' ? 
+        filteredPurchases : 
+        filteredPurchases.filter(log => log.product.name === selectedProduct);
+
+    //Calculate the number of trials for each product
     finalTrials.forEach(log => {
       const productName = log.product.name;
       if (!productData[productName]) {
@@ -80,6 +87,7 @@ const TrialToPurchase = () => {
       productData[productName].trials += 1;
     });
 
+    //calculate purchases for the selected product
     finalPurchases.forEach(log => {
       const productName = log.product.name;
       if (!productData[productName]) {
@@ -89,8 +97,10 @@ const TrialToPurchase = () => {
     });
 
     const productNames = Object.keys(productData);
+    console.log(productData);
     const trialsData = productNames.map(name => productData[name].trials);
     const purchasesData = productNames.map(name => productData[name].purchases);
+
 
     setChartData({
       labels: productNames,

@@ -33,8 +33,8 @@ function About() {
                                 <li>
                                     <h5>📊 Logs from Shelf Sensors</h5>
                                     <p>
-                                        Our system tracks how long shoppers spend in front of each shelf with the help of the shelf sensors,
-                                        providing insights into which products attract attention and which may require adjustments in placement.
+                                        This system tracks how long shoppers spend in front of each shelf with the help of the shelf sensors,
+                                        providing insights into which range of products attract attention and which may require adjustments in placement.
                                     </p>
                                 </li>
                                 <li>
@@ -54,11 +54,11 @@ function About() {
                             </ul>
 
                             <p className="text-center mt-4 conclusion">
-                                With these features, our Shopper Tracking System helps businesses enhance customer experience, 
+                                With these features, this system helps businesses enhance customer experience, 
                                 optimize inventory, and drive sales growth. 
                             </p>
                             <p className="text-center conclusion">
-                                Explore the dashboard to manage and view real-time logs, sensor activity, and comprehensive analytics 
+                                Explore the dashboard to view real-time logs from sensors, purchases, and comprehensive analytics 
                                 to take your retail strategy to the next level.
                             </p>
                         </Card.Body>
