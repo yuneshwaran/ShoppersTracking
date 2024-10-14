@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 
 const Password = ({ showModal, handleClose }) => {
+  
   const navigate = useNavigate();
   const [password, setPassword] = useState(''); 
   const [newPassword, setNewPassword] = useState('');

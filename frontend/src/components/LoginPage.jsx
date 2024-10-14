@@ -1,12 +1,10 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLogin } from '../utils/LoginContext';
 import { FaArrowLeft } from "react-icons/fa";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './Styles.css'; 
 
 const LoginPage = () => {
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -31,8 +29,6 @@ const LoginPage = () => {
       const jwt = await response.text();
       login(jwt);
       navigate('/', { replace: true });
-
-
     } catch (error) {
       console.error('Login error:', error);
       setError('Invalid username or password');
@@ -40,9 +36,10 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center vh-100">
+    <div className="container-fluid d-flex justify-content-center align-items-center vh-100 bg-dark">
+      <div className="background-blur"></div>
       <div className="card p-4" style={{ width: '400px' }}>
-        <button className='btn me-auto' onClick={()=>navigate('/home')}><FaArrowLeft/></button>
+        <button className='btn me-auto' onClick={() => navigate('/')}><FaArrowLeft /></button>
         <h2 className="text-center mb-4">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group mb-3">
@@ -68,9 +65,7 @@ const LoginPage = () => {
             />
           </div>
           {error && <div className="alert alert-danger" role="alert">{error}</div>}
-
-              <button type="submit" className="btn btn-primary w-100">Login</button> 
-
+          <button type="submit" className="btn btn-primary w-100">Login</button>
         </form>
       </div>
     </div>

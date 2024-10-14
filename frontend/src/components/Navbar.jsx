@@ -48,22 +48,22 @@ const NavBar = () => {
                   Logs
                 </Nav.Link>
               </Nav.Item>
-              <Nav.Item>
+              {/* <Nav.Item>
                 <Nav.Link className={({ isActive }) => isActive ? 'active' : ''} onClick={handleShow}>
                   Update Password
                 </Nav.Link>
-              </Nav.Item>
+              </Nav.Item> */}
 
-              {admin && (
-                <NavDropdown title="Admin Actions" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="/add/product">Add Product</NavDropdown.Item>
-                  <NavDropdown.Item href="/add/product">Add Brand</NavDropdown.Item>
+              
+                <NavDropdown title="Admin Actions" id="basic-nav-dropdown" className=''>
+                  <NavDropdown.Item disabled href="/add/product">Add Product</NavDropdown.Item>
+                  <NavDropdown.Item disabled href="/add/product">Add Brand</NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="/add/user">Add User</NavDropdown.Item>
-                  <NavDropdown.Item onClick={handleShow}>Update Password</NavDropdown.Item>
+                  <NavDropdown.Item disabled href="/add/user">Add User</NavDropdown.Item>
+                  <NavDropdown.Item  onClick={handleShow}>Update Password</NavDropdown.Item>
                 </NavDropdown>
                 
-              )}
+              
               <Password showModal={showModal} handleClose={handleClose} />
             </>
           )}
@@ -78,7 +78,7 @@ const NavBar = () => {
             Login
           </Button>
         )}
-        <Password showModal={showModal} handleClose={handleClose} />
+
       </Navbar.Collapse>
     </Navbar>
   );

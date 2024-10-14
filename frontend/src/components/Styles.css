@@ -78,3 +78,29 @@
 .links:hover {
     text-decoration: underline;  
 }
+
+/* login */
+.container-fluid {
+  position: relative;
+}
+
+.background-blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('../assets/Login.jpg'); /* Ensure the path is correct */
+  background-size: cover;
+  filter: blur(8px); /* Adjust the blur amount */
+  z-index: 1; /* Place it behind the card */
+}
+
+.card {
+  position: relative;
+  z-index: 2; /* Place the card above the blurred background */
+  background: rgba(255, 255, 255, 0.3); /* Adjust the opacity for transparency */
+  backdrop-filter: blur(15px); /* Add a blur effect to the background behind the card */
+  border-radius: 10px; /* Optional: rounded corners */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Optional: shadow for depth */
+}

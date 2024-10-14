@@ -15,10 +15,12 @@ export const ShelfSensorLogs = () => {
             },
           });
           setShelfLogs(response.data);
+          
         } catch (error) {
           console.error('Error fetching shelf logs:', error);
         }
       };
+      
       fetchShelfLogs();
     }, []);
   

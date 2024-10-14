@@ -16,18 +16,18 @@ public class ShelfSensorLogService {
     private ShelfSensorLogRepo shelfSensorLogRepo;
 
     // Log customer entry near a shelf
-    public ShelfSensorLog logEntry(int shelfId) {
+    public int logEntry(int shelfId) {
         ShelfSensorLog log = new ShelfSensorLog();
         Shelf shelf = new Shelf();
         shelf.setId(shelfId);
 
         log.setShelf(shelf);
         log.setEntryTime(new Date());
-        return shelfSensorLogRepo.save(log);
+        return shelfSensorLogRepo.save(log).getId();
     }
 
     // Log customer exit near a shelf
-    public ShelfSensorLog logExit(int logId) {
+    public int logExit(int logId) {
 
         ShelfSensorLog log = shelfSensorLogRepo.findById(logId).orElse(null);
 
@@ -36,7 +36,7 @@ public class ShelfSensorLogService {
             shelfSensorLogRepo.save(log);
         }
 
-        return log;
+        return log.getId();
     }
 
     // Fetch logs by Shelf ID

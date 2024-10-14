@@ -6,6 +6,7 @@ import com.backend.ShopperTracking.dto.PurchaseLog;
 import com.backend.ShopperTracking.dto.ShelfSensorLog;
 import com.backend.ShopperTracking.dto.TrialRoomLog;
 import com.backend.ShopperTracking.dto.TrialRoomLogRequest;
+import com.backend.ShopperTracking.model.ShelfSensor;
 import com.backend.ShopperTracking.service.PurchaseLogService;
 import com.backend.ShopperTracking.service.sensors.ShelfSensorLogService;
 import com.backend.ShopperTracking.service.sensors.TrialRoomLogService;
@@ -32,17 +33,28 @@ public class LoggingController {
     //shelfSensorLogging
 
     //Log the entry with the shelfId
-    @PostMapping("/shelf/entry/{shelfId}")
-    public ShelfSensorLog logEntry(@PathVariable int shelfId) {
-        return shelfSensorLogService.logEntry(shelfId);
+//    @PostMapping("/shelf/entry/{shelfId}")
+//    public ShelfSensorLog logEntry(@PathVariable int shelfId) {
+//        return shelfSensorLogService.logEntry(shelfId);
+//    }
+    @PostMapping("/shelf/entry")
+    public int logEntry(@RequestBody ShelfSensor shelfSensor) {
+
+        return shelfSensorLogService.logEntry(shelfSensor.getId());
+
     }
 
 
+//    @PutMapping("/shelf/exit/{shelfId}")
+//    public ShelfSensorLog logExit(@RequestBody ShelfSensorLog log) {
+//        int id = log.getId();
+//        return shelfSensorLogService.logExit(id);
+//    }
 // Log the exit with the log id
-    @PutMapping("/shelf/exit/{shelfId}")
-    public ShelfSensorLog logExit(@RequestBody ShelfSensorLog log) {
-        int id = log.getId();
-        return shelfSensorLogService.logExit(id);
+    @PutMapping("/shelf/exit")
+    public String logExit(@RequestBody ShelfSensorLog log){
+        String res = "Logged Exit with id :"+ shelfSensorLogService.logExit(log.getId());
+        return res;
     }
 
     // Fetch logs by Shelf ID
