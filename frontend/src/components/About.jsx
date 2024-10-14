@@ -70,8 +70,8 @@ function About() {
                     <h5>Shoppers Tracker System</h5>
                     <span className='d-flex justify-content-center'>
                         <a className='links' onClick={handleContact}>Contact</a>
-                        <a className='links mx-3'>Feedback</a>
-                        <a className='links'>Location</a>
+                        {/* <a className='links mx-3'>Feedback</a>
+                        <a className='links'>Location</a> */}
                     </span>
                 </div>
             </footer>

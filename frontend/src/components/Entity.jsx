@@ -1,7 +1,7 @@
 import { NavLink, Routes, Route } from "react-router-dom";
 import Nav from 'react-bootstrap/Nav';
-import { Products, Shelves, HangerSensor } from "./Entities/Entities";
-
+import { Shelves, HangerSensor } from "./Entities/Entities";
+import Products from './Entities/Products';
 import './Styles.css';
 
 
@@ -45,7 +45,7 @@ const Entity = () => {
               path="product"
               element={
                 <div className="col p-2 flex-grow-1 bg-dark rounded" style={{ maxWidth: '100%' }}>
-                  <Products />
+                  <Products/>
                 </div>
               }
             />

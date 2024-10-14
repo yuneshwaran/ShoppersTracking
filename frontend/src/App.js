@@ -21,8 +21,8 @@ function MainPage() {
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} /> 
-        <Route path='/logs/*' element={<Logs/>}/>
-        <Route path='/entity/*' element={<Entity/>}/>
+        <Route path='/logs/*' element={<ProtectedRoute><Logs/></ProtectedRoute>}/>
+        <Route path='/entity/*' element={<ProtectedRoute><Entity/></ProtectedRoute>}/>
         <Route path="/insights/*" element={<ProtectedRoute><Insights /></ProtectedRoute>} />
         <Route path="/inventory/*" element={<ProtectedRoute><Inventory /></ProtectedRoute>} />
       </Routes>

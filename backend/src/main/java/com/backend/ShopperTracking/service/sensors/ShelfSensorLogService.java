@@ -46,6 +46,6 @@ public class ShelfSensorLogService {
 
     // Fetch all logs
     public List<ShelfSensorLog> getAllLogs() {
-        return shelfSensorLogRepo.findAll();
+        return shelfSensorLogRepo.findAllDesc();
     }
 }

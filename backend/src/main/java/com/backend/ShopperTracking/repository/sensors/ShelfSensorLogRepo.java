@@ -2,6 +2,7 @@ package com.backend.ShopperTracking.repository.sensors;
 
 import com.backend.ShopperTracking.dto.ShelfSensorLog;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,4 +10,7 @@ import java.util.List;
 @Repository
 public interface ShelfSensorLogRepo extends JpaRepository<ShelfSensorLog, Integer> {
     List<ShelfSensorLog> findByShelf_Id(int shelfId);
+
+    @Query(value = "Select * from shelf_sensor_log order by entry_time desc ;",nativeQuery = true)
+    List<ShelfSensorLog> findAllDesc();
 }

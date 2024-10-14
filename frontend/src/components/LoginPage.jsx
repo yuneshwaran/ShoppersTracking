@@ -39,11 +39,11 @@ const LoginPage = () => {
   return (
     <div className="container-fluid d-flex justify-content-center align-items-center vh-100 bg-dark">
       <div className="background-blur"></div>
-      <div className="card p-4" style={{ width: '400px' }}>
+      <div className="card p-4 bg-dark" style={{ width: '400px' }}>
         <button className='btn me-auto' onClick={() => navigate('/')}><FaArrowLeft /></button>
-        <h2 className="text-center mb-4">Welcome Back</h2>
+        <h2 className="text-center mb-4 text-light ">Welcome Back !</h2>
         <form onSubmit={handleSubmit}>
-          <div className="form-group mb-3">
+          <div className="form-group mb-3 text-light">
             <label htmlFor="username">Username</label>
             <input
               type="text"
@@ -54,13 +54,13 @@ const LoginPage = () => {
               required
             />
           </div>
-          <div className="form-group mb-3">
+          <div className="form-group mb-3 text-light">
             <label htmlFor="password">Password</label>
             <input
               type="password"
               className="form-control"
               id="password"
-              value={password}
+              value={password}  
               onChange={(e) => setPassword(e.target.value)}
               required
             />

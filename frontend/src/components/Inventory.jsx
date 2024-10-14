@@ -132,7 +132,7 @@ function Inventory() {
           </div>
         
           <div className=" col-md-2 text-end">
-            <div className="fs-5 text-dark badge">Add Product:</div>
+            <div className="fs-5 text-dark badge">Add Stock:</div>
           </div>
 
           <div className="col-md-2">
@@ -158,7 +158,7 @@ function Inventory() {
           </div>
 
           <div className="col-md-2">
-            <button className="btn btn-primary" onClick={handleAddNewProduct}>
+            <button className="btn btn-success" onClick={handleAddNewProduct}>
               <FaPlus /> Add Product
             </button>
           </div>

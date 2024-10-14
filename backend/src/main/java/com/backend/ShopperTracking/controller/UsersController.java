@@ -27,6 +27,7 @@ public class UsersController {
     public String register(@RequestBody Users user) {
         return usersService.saveUser(user);
     }
+
     @PutMapping("/login")
     public String password(@RequestBody Users user) {
         return usersService.updateUser(user);
