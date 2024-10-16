@@ -3,6 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import ShelfSensorLogs from "./Charts/ShelfSensorLogs";
 import TrialRoomLog from './Charts/TrialRoomLog';
 import TrialToPurchase from "./Charts/TrialToSales";
+import AverageTimeByProduct from "./Charts/AverageTimeByProduct";
 
 export const Insights = () => {
   return (
@@ -16,21 +17,20 @@ export const Insights = () => {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
+          <Nav.Link as={NavLink} to="trial" className={({ isActive }) => (isActive ? "active" : "")}>
+            Trial Room Crossings
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
           <Nav.Link as={NavLink} to="ratio" className={({ isActive }) => (isActive ? "active" : "")}>
             Trial : Sales
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={NavLink} to="trial" className={({ isActive }) => (isActive ? "active" : "")}>
-            Trial Room Crossings
+          <Nav.Link as={NavLink} to="avg-time" className={({ isActive }) => (isActive ? "active" : "")}>
+            Average Time/Product
           </Nav.Link>
         </Nav.Item>
-
-        {/* <Nav.Item>
-          <Nav.Link as={NavLink} to="purchase" className={({ isActive }) => (isActive ? "active" : "")}>
-            Purchase Logs
-          </Nav.Link>
-        </Nav.Item> */}
       </Nav>
     </div>
 
@@ -57,6 +57,14 @@ export const Insights = () => {
             element={
               <div className="col p-2 flex-grow-1 bg-dark rounded" style={{ maxWidth: "100%" }}>
                 <TrialToPurchase />
+              </div>
+            }
+          />
+         <Route
+            path="avg-time"
+            element={
+              <div className="col p-2 flex-grow-1 bg-dark rounded" style={{ maxWidth: "100%" }}>
+                <AverageTimeByProduct />
               </div>
             }
           />

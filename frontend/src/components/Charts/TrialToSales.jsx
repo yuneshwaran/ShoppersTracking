@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Form } from 'react-bootstrap';
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 const TrialToPurchase = () => {
 
@@ -9,9 +10,8 @@ const TrialToPurchase = () => {
   const [purchaseLogs, setPurchaseLogs] = useState([]);
   const [chartData, setChartData] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState('All');
-  const [selectedProduct, setSelectedProduct] = useState('All');
+  const [selectedDuration, setSelectedDuration] = useState('1m'); // Default to 1 month
   const [brands, setBrands] = useState(['All']);
-  const [products, setProducts] = useState([]);
   const token = localStorage.getItem('jwt');  
 
 
@@ -45,41 +45,36 @@ const TrialToPurchase = () => {
     fetchLogs();
   }, [token]);
 
-  useEffect(() => {
-    if (selectedBrand !== 'All') {
-      const filteredProducts = trialLogs
-        .filter(log => log.product.brand.name === selectedBrand)
-        .map(log => log.product.name);
-
-      setProducts([ ...new Set(filteredProducts)]);
-    } else {
-      setProducts([]);
+  // Calculate the start date based on selected duration
+  const calculateStartDate = (duration) => {
+    switch (duration) {
+      case '1m':
+        return dayjs().subtract(1, 'month');
+      case '3m':
+        return dayjs().subtract(3, 'months');
+      case '6m':
+        return dayjs().subtract(6, 'months');
+      default:
+        return dayjs().subtract(10, 'years'); // default long history
     }
-  }, [selectedBrand, trialLogs]);
+  };
 
-
+  // Filter logs and update chart data when brand or duration changes
   useEffect(() => {
 
+    const startDate = calculateStartDate(selectedDuration);
     const productData = {};
 
     const filteredTrials = selectedBrand === 'All' ? 
-        trialLogs : 
-        trialLogs.filter(log => log.product.brand.name === selectedBrand);
+        trialLogs.filter(log => dayjs(log.entryTime).isAfter(startDate)) :
+        trialLogs.filter(log => log.product.brand.name === selectedBrand && dayjs(log.entryTime).isAfter(startDate));
 
     const filteredPurchases = selectedBrand === 'All' ? 
-        purchaseLogs : 
-        purchaseLogs.filter(log => log.product.brand.name === selectedBrand);
+        purchaseLogs.filter(log => dayjs(log.purchaseTime).isAfter(startDate)) :
+        purchaseLogs.filter(log => log.product.brand.name === selectedBrand && dayjs(log.purchaseTime).isAfter(startDate));
 
-    const finalTrials = selectedProduct === 'All' ? 
-        filteredTrials : 
-        filteredTrials.filter(log => log.product.name === selectedProduct);
-
-    const finalPurchases = selectedProduct === 'All' ? 
-        filteredPurchases : 
-        filteredPurchases.filter(log => log.product.name === selectedProduct);
-
-    //Calculate the number of trials for each product
-    finalTrials.forEach(log => {
+    // Calculate the number of trials for each product
+    filteredTrials.forEach(log => {
       const productName = log.product.name;
       if (!productData[productName]) {
         productData[productName] = { trials: 0, purchases: 0 };
@@ -87,8 +82,8 @@ const TrialToPurchase = () => {
       productData[productName].trials += 1;
     });
 
-    //calculate purchases for the selected product
-    finalPurchases.forEach(log => {
+    // Calculate purchases for each product
+    filteredPurchases.forEach(log => {
       const productName = log.product.name;
       if (!productData[productName]) {
         productData[productName] = { trials: 0, purchases: 0 };
@@ -97,10 +92,8 @@ const TrialToPurchase = () => {
     });
 
     const productNames = Object.keys(productData);
-    console.log(productData);
     const trialsData = productNames.map(name => productData[name].trials);
     const purchasesData = productNames.map(name => productData[name].purchases);
-
 
     setChartData({
       labels: productNames,
@@ -117,7 +110,7 @@ const TrialToPurchase = () => {
         },
       ],
     });
-  }, [trialLogs, purchaseLogs, selectedBrand, selectedProduct]);
+  }, [trialLogs, purchaseLogs, selectedBrand, selectedDuration]);
 
   return (
     <div className='container'>
@@ -128,10 +121,7 @@ const TrialToPurchase = () => {
           <div className='text-light'>Select Brand: </div>
           <Form.Select
             value={selectedBrand}
-            onChange={(e) => { 
-              setSelectedBrand(e.target.value);
-              setSelectedProduct('All');
-            }}
+            onChange={(e) => setSelectedBrand(e.target.value)}
           >
             {brands.map((brand) => (
               <option key={brand} value={brand}>{brand}</option>
@@ -140,16 +130,14 @@ const TrialToPurchase = () => {
         </div>
 
         <div className='container align-items-center'>
-          <div className='text-light'>Select Product: </div>
+          <div className='text-light'>Select Duration: </div>
           <Form.Select
-            value={selectedProduct}
-            onChange={(e) => setSelectedProduct(e.target.value)}
-            disabled={products.length === 0}
+            value={selectedDuration}
+            onChange={(e) => setSelectedDuration(e.target.value)}
           >
-            <option value="All">All</option>
-            {products.map(product => (
-              <option key={product} value={product}>{product}</option>
-            ))}
+            <option value="1m">Last 1 Month</option>
+            <option value="3m">Last 3 Months</option>
+            <option value="6m">Last 6 Months</option>
           </Form.Select>
         </div>
       </div>

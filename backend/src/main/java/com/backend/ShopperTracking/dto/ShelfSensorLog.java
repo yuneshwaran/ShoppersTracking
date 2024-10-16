@@ -22,7 +22,7 @@ public class ShelfSensorLog {
     private Date entryTime;
     private Date exitTime;
 
-    @Transient
-    private int duration;
+    @Column(insertable = false, updatable = false)
+    private Integer duration;
 
 }
