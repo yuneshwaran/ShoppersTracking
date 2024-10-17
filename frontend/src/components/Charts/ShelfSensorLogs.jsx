@@ -18,7 +18,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 const ShelfSensorLogs = () => {
   const [logs, setLogs] = useState([]);
-  const [timeRange, setTimeRange] = useState('1m');
+  const [timeRange, setTimeRange] = useState('1');
   const [selectedShelf, setSelectedShelf] = useState('');
   const [shelves, setShelves] = useState([]);
 
@@ -53,17 +53,29 @@ const ShelfSensorLogs = () => {
     .filter(log => {
       const now = dayjs();
       const entryDate = dayjs(log.entryTime);
-      const timePeriod = { '1m': 1, '3m': 3, '6m': 6 }[timeRange];
-      return entryDate.isAfter(now.subtract(timePeriod, 'month'));
+      return entryDate.isAfter(now.subtract(timeRange, 'month'));
     })
-    .sort((a, b) => new Date(a.entryTime) - new Date(b.entryTime)); // Sort from past to latest
+    .sort((a, b) => new Date(a.entryTime) - new Date(b.entryTime)); 
 
-  const data = {
-    labels: filteredLogs.map(log => dayjs(log.entryTime).format('YYYY-MM-DD')),
+  const aggregatedData = filteredLogs.reduce((acc, log) => {
+    const date = dayjs(log.entryTime).format('YYYY-MM-DD');
+    const duration = dayjs(log.exitTime).diff(dayjs(log.entryTime), 'minute');
+    
+    if (!acc[date]) {
+      acc[date] = duration;
+    } else {
+      acc[date] += duration;
+    }
+
+    return acc;
+  }, {});
+
+  const chartData = {
+    labels: Object.keys(aggregatedData),
     datasets: [
       {
-        label: 'Duration (minutes)',
-        data: filteredLogs.map(log => dayjs(log.exitTime).diff(dayjs(log.entryTime), 'minute')),
+        label: 'Total Duration (minutes)',
+        data: Object.values(aggregatedData),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
       },
@@ -94,15 +106,15 @@ const ShelfSensorLogs = () => {
             onChange={(e) => setTimeRange(e.target.value)}
             value={timeRange}
           >
-            <option value="1m">Last 1 Month</option>
-            <option value="3m">Last 3 Months</option>
-            <option value="6m">Last 6 Months</option>
+            <option value='1'>Last 1 Month</option>
+            <option value="3">Last 3 Months</option>
+            <option value="6">Last 6 Months</option>
           </Form.Select>
         </div>
       </div>
 
       <div className="row">
-        <Line data={data} />
+        <Line data={chartData} />
       </div>
     </div>
   );

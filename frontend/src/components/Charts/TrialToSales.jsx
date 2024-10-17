@@ -10,7 +10,7 @@ const TrialToPurchase = () => {
   const [purchaseLogs, setPurchaseLogs] = useState([]);
   const [chartData, setChartData] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState('All');
-  const [selectedDuration, setSelectedDuration] = useState('1m'); // Default to 1 month
+  const [selectedDuration, setSelectedDuration] = useState('6m'); 
   const [brands, setBrands] = useState(['All']);
   const token = localStorage.getItem('jwt');  
 
@@ -45,7 +45,6 @@ const TrialToPurchase = () => {
     fetchLogs();
   }, [token]);
 
-  // Calculate the start date based on selected duration
   const calculateStartDate = (duration) => {
     switch (duration) {
       case '1m':
@@ -55,11 +54,10 @@ const TrialToPurchase = () => {
       case '6m':
         return dayjs().subtract(6, 'months');
       default:
-        return dayjs().subtract(10, 'years'); // default long history
+        return dayjs().subtract(10, 'years'); 
     }
   };
 
-  // Filter logs and update chart data when brand or duration changes
   useEffect(() => {
 
     const startDate = calculateStartDate(selectedDuration);
@@ -73,7 +71,6 @@ const TrialToPurchase = () => {
         purchaseLogs.filter(log => dayjs(log.purchaseTime).isAfter(startDate)) :
         purchaseLogs.filter(log => log.product.brand.name === selectedBrand && dayjs(log.purchaseTime).isAfter(startDate));
 
-    // Calculate the number of trials for each product
     filteredTrials.forEach(log => {
       const productName = log.product.name;
       if (!productData[productName]) {
@@ -82,7 +79,7 @@ const TrialToPurchase = () => {
       productData[productName].trials += 1;
     });
 
-    // Calculate purchases for each product
+
     filteredPurchases.forEach(log => {
       const productName = log.product.name;
       if (!productData[productName]) {

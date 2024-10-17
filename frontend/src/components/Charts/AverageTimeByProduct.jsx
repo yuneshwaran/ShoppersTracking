@@ -6,12 +6,12 @@ import dayjs from 'dayjs';
 
 const AverageTimeByProduct = () => {
   const [trialLogs, setTrialLogs] = useState([]);
-  const [shelfLogs, setShelfLogs] = useState([]);
+  const [purchaseLogs, setPurchaseLogs] = useState([]);
   const [brands, setBrands] = useState([]);
-  const [selectedDuration, setSelectedDuration] = useState('1m'); // Default to 1 month
+  const [selectedDuration, setSelectedDuration] = useState('3m');
   const [selectedBrand, setSelectedBrand] = useState('');
   const [chartData, setChartData] = useState(null);
-  
+
   const token = localStorage.getItem('jwt');
 
   const calculateStartDate = (duration) => {
@@ -23,11 +23,11 @@ const AverageTimeByProduct = () => {
       case '6m':
         return dayjs().subtract(6, 'months');
       default:
-        return dayjs().subtract(10, 'years'); // Default for long history
+        return dayjs().subtract(1, 'years');
     }
   };
 
-  // Fetch logs when component mounts
+  // Fetch logs on mount
   useEffect(() => {
     const fetchLogs = async () => {
       try {
@@ -36,13 +36,19 @@ const AverageTimeByProduct = () => {
         });
         setTrialLogs(trialResponse.data);
 
-        const shelfResponse = await axios.get('http://localhost:8080/api/track/shelf/logs', {
+        const purchaseResponse = await axios.get('http://localhost:8080/api/track/purchase', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setShelfLogs(shelfResponse.data);
+        setPurchaseLogs(purchaseResponse.data);
 
-        // Set unique brands based on trial logs
-        const uniqueBrands = [...new Set(trialResponse.data.map(log => log.product.brand.name))];
+        // Extract unique brands from trial logs
+        const uniqueBrands = [
+          ...new Set(trialResponse.data
+            .filter(log => log.product && log.product.brand) // Ensure product and brand exist
+            .map(log => log.product.brand.name)
+          )
+        ];
+
         setBrands(uniqueBrands);
       } catch (error) {
         console.error('Failed to fetch logs:', error);
@@ -52,42 +58,42 @@ const AverageTimeByProduct = () => {
     fetchLogs();
   }, [token]);
 
-  // Update chart data whenever the logs, duration, or brand changes
+  // Recalculate chart data when logs or filters change
   useEffect(() => {
     const startDate = calculateStartDate(selectedDuration);
 
-    // Filter trial logs by selected duration and brand
-    const filteredTrialLogs = trialLogs.filter(log => 
-      dayjs(log.entryTime).isAfter(startDate) && (selectedBrand ? log.product.brand.name === selectedBrand : true)
+    // Filter logs by selected duration and brand
+    const filteredTrialLogs = trialLogs.filter(log =>
+      dayjs(log.entryTime).isAfter(startDate) &&
+      log.product && log.product.brand && // Ensure product and brand are valid
+      (selectedBrand ? log.product.brand.name === selectedBrand : true)
     );
 
-    // Prepare to calculate average time spent for each product
     const productTimes = {};
 
-    filteredTrialLogs.forEach(log => {
-      const productName = log.product.name;
-      const shelfLog = shelfLogs.find(shelfLog => 
-        shelfLog.shelf.id === log.product.shelf.id && 
-        dayjs(shelfLog.exitTime).isAfter(log.entryTime) // Ensure shelf log exits after trial entry
+    filteredTrialLogs.forEach(trialLog => {
+      const productName = trialLog.product.name; // Assume product exists due to earlier checks
+      const purchaseLog = purchaseLogs.find(purchase => 
+        purchase.product && // Ensure purchase log has a valid product
+        purchase.product.id === trialLog.product.id && 
+        dayjs(purchase.purchaseDate).isAfter(trialLog.entryTime) // Ensure purchase happens after trial entry
       );
 
-      if (shelfLog) {
-        const trialTime = shelfLog.exitTime
-          ? dayjs(shelfLog.exitTime).diff(dayjs(log.entryTime), 'minute')
-          : dayjs().diff(dayjs(log.entryTime), 'minute'); // Fallback if no exit time
+      if (purchaseLog) {
+        const timeSpent = dayjs(purchaseLog.purchaseDate).diff(dayjs(trialLog.entryTime), 'minute'); // In minutes
 
         if (!productTimes[productName]) {
           productTimes[productName] = { totalTime: 0, count: 0 };
         }
 
-        productTimes[productName].totalTime += trialTime;
+        productTimes[productName].totalTime += timeSpent;
         productTimes[productName].count += 1;
       }
     });
 
     // Prepare chart data
     const productNames = Object.keys(productTimes);
-    const avgTimes = productNames.map(name => 
+    const avgTimes = productNames.map(name =>
       (productTimes[name].totalTime / (productTimes[name].count * 60)).toFixed(2) // Convert to hours
     );
 
@@ -107,7 +113,7 @@ const AverageTimeByProduct = () => {
     } else {
       setChartData(null);
     }
-  }, [trialLogs, shelfLogs, selectedDuration, selectedBrand]);
+  }, [trialLogs, purchaseLogs, selectedDuration, selectedBrand]);
 
   return (
     <div className="container">

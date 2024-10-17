@@ -1,7 +1,6 @@
 import { NavLink, Routes, Route } from "react-router-dom";
 import Nav from 'react-bootstrap/Nav';
 import ShelfSensorLogs from "./Charts/ShelfSensorLogs";
-import TrialRoomLog from './Charts/TrialRoomLog';
 import TrialToPurchase from "./Charts/TrialToSales";
 import AverageTimeByProduct from "./Charts/AverageTimeByProduct";
 
@@ -14,11 +13,6 @@ export const Insights = () => {
         <Nav.Item>
           <Nav.Link as={NavLink} to="shelf" className={({ isActive }) => (isActive ? "active" : "")}>
             Shelf Sensor Logs
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link as={NavLink} to="trial" className={({ isActive }) => (isActive ? "active" : "")}>
-            Trial Room Crossings
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
@@ -41,14 +35,6 @@ export const Insights = () => {
             element={
               <div className="col p-2 flex-grow-1 bg-dark rounded" style={{ maxWidth: "100%" }}>
                 <ShelfSensorLogs />
-              </div>
-            }
-          />
-          <Route
-            path="trial"
-            element={
-              <div className="col p-2 flex-grow-1 bg-dark rounded" style={{ maxWidth: "100%" }}>
-                <TrialRoomLog />
               </div>
             }
           />
