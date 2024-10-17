@@ -24,9 +24,7 @@ public class PurchaseLog {
     private Product product;
 
     private int quantity;
-
     private double totalPrice;
-
     private Date purchaseDate;
 
 }

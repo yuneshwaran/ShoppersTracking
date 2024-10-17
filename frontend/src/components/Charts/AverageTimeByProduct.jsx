@@ -5,6 +5,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 
 const AverageTimeByProduct = () => {
+
   const [trialLogs, setTrialLogs] = useState([]);
   const [purchaseLogs, setPurchaseLogs] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -27,7 +28,7 @@ const AverageTimeByProduct = () => {
     }
   };
 
-  // Fetch logs on mount
+
   useEffect(() => {
     const fetchLogs = async () => {
       try {
@@ -41,10 +42,10 @@ const AverageTimeByProduct = () => {
         });
         setPurchaseLogs(purchaseResponse.data);
 
-        // Extract unique brands from trial logs
+
         const uniqueBrands = [
           ...new Set(trialResponse.data
-            .filter(log => log.product && log.product.brand) // Ensure product and brand exist
+            .filter(log => log.product && log.product.brand) 
             .map(log => log.product.brand.name)
           )
         ];
@@ -58,29 +59,27 @@ const AverageTimeByProduct = () => {
     fetchLogs();
   }, [token]);
 
-  // Recalculate chart data when logs or filters change
   useEffect(() => {
     const startDate = calculateStartDate(selectedDuration);
 
-    // Filter logs by selected duration and brand
     const filteredTrialLogs = trialLogs.filter(log =>
       dayjs(log.entryTime).isAfter(startDate) &&
-      log.product && log.product.brand && // Ensure product and brand are valid
+      log.product && log.product.brand &&
       (selectedBrand ? log.product.brand.name === selectedBrand : true)
     );
 
     const productTimes = {};
 
     filteredTrialLogs.forEach(trialLog => {
-      const productName = trialLog.product.name; // Assume product exists due to earlier checks
+      const productName = trialLog.product.name;
       const purchaseLog = purchaseLogs.find(purchase => 
-        purchase.product && // Ensure purchase log has a valid product
+        purchase.product && 
         purchase.product.id === trialLog.product.id && 
-        dayjs(purchase.purchaseDate).isAfter(trialLog.entryTime) // Ensure purchase happens after trial entry
+        dayjs(purchase.purchaseDate).isAfter(trialLog.entryTime)
       );
 
       if (purchaseLog) {
-        const timeSpent = dayjs(purchaseLog.purchaseDate).diff(dayjs(trialLog.entryTime), 'minute'); // In minutes
+        const timeSpent = dayjs(purchaseLog.purchaseDate).diff(dayjs(trialLog.entryTime), 'minute');
 
         if (!productTimes[productName]) {
           productTimes[productName] = { totalTime: 0, count: 0 };
@@ -91,10 +90,9 @@ const AverageTimeByProduct = () => {
       }
     });
 
-    // Prepare chart data
     const productNames = Object.keys(productTimes);
     const avgTimes = productNames.map(name =>
-      (productTimes[name].totalTime / (productTimes[name].count * 60)).toFixed(2) // Convert to hours
+      (productTimes[name].totalTime / (productTimes[name].count * 60)).toFixed(2) 
     );
 
     if (productNames.length > 0 && avgTimes.length > 0) {

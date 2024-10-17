@@ -66,7 +66,6 @@ const ShelfSensorLogs = () => {
     } else {
       acc[date] += duration;
     }
-
     return acc;
   }, {});
 

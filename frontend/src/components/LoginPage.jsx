@@ -11,6 +11,11 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { login } = useLogin();
 
+  const validate=(input)=>{
+    setUsername(input.trim())
+  }
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -50,7 +55,7 @@ const LoginPage = () => {
               className="form-control"
               id="username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => validate(e.target.value)}
               required
             />
           </div>

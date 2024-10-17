@@ -30,12 +30,10 @@ public class JWTService {
 
     String secretKey;
 
-    //generate on bean creation
     public JWTService(){
         secretKey = generateSecretKey();
     }
 
-    //key generator
     public String generateSecretKey() {
         try{
             KeyGenerator keygen = KeyGenerator.getInstance("HmacSHA256");
@@ -85,7 +83,6 @@ public class JWTService {
                 .build().parseClaimsJws(token).getBody();
     }
 
-
     public boolean validate(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
@@ -98,6 +95,5 @@ public class JWTService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
-
 
 }
