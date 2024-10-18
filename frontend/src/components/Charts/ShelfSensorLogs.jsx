@@ -3,18 +3,9 @@ import { Line } from 'react-chartjs-2';
 import { Form } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import axios from 'axios';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+import {Chart, registerables} from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+Chart.register(...registerables);
 
 const ShelfSensorLogs = () => {
   const [logs, setLogs] = useState([]);
@@ -24,6 +15,7 @@ const ShelfSensorLogs = () => {
 
   useEffect(() => {
     const fetchLogs = async () => {
+      console.log('shelf log fetched')
       try {
         const token = localStorage.getItem('jwt');
         const response = await axios.get('http://localhost:8080/api/track/shelf/logs', {
@@ -44,8 +36,11 @@ const ShelfSensorLogs = () => {
         console.error('Error fetching shelf logs:', error);
       }
     };
-
     fetchLogs();
+
+    const intervalId = setInterval(fetchLogs, 10000); 
+    return () => clearInterval(intervalId);
+
   }, [selectedShelf]);
 
   const filteredLogs = logs

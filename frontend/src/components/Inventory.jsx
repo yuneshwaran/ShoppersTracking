@@ -15,6 +15,8 @@ function Inventory() {
   const token = localStorage.getItem("jwt");
 
   const fetchProducts = useCallback(async () => {
+
+    console.log('Inventory fetched')
     try {
       const { data, status } = await axios.get(`http://localhost:8080/api/stock`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -41,6 +43,9 @@ function Inventory() {
 
   useEffect(() => {
     fetchProducts();
+
+    const intervalId = setInterval(fetchProducts, 10000); 
+    return () => clearInterval(intervalId);
   }, [fetchProducts]);
 
   const handleSearchChange = (value) => {

@@ -16,14 +16,17 @@ public class UsersService {
 
     public String saveUser (Users user){
 
+        System.out.println(user.toString());
         user.setPassword(encoder.encode(user.getPassword()));
 
-        //filter user role
-        if(user.getRole().contains("admin")){
-            user.setRole("ROLE_ADMIN");
-        }
-        else{
+        //user role null handling
+        if(user.getRole() == null){
             user.setRole("ROLE_USER");
+        }
+
+        //filter user role
+        if(user.getRole().contains("user")){
+            user.setRole("ROLE_ADMIN");
         }
 
         repo.save(user);

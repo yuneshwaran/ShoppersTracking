@@ -3,6 +3,9 @@ import { Bar } from 'react-chartjs-2';
 import { Form } from 'react-bootstrap';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import {Chart, registerables} from 'chart.js';
+
+Chart.register(...registerables);
 
 const TrialToPurchase = () => {
 
@@ -18,6 +21,7 @@ const TrialToPurchase = () => {
   useEffect(() => {
     const fetchLogs = async () => {
   
+      console.log("Fetch Trial Logs")
       try {
         const trialResponse = await axios.get('http://localhost:8080/api/track/trial/all', {
           headers: {
@@ -43,6 +47,10 @@ const TrialToPurchase = () => {
     };
 
     fetchLogs();
+
+    const intervalId = setInterval(fetchLogs, 10000); 
+    return () => clearInterval(intervalId);
+
   }, [token]);
 
   const calculateStartDate = (duration) => {

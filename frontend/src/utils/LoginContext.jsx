@@ -9,7 +9,7 @@ export const  useLogin = () => useContext(LoginContext);
 export const LoginProvider = ({ children }) => {
 
   const [token, setToken] = useState(localStorage.getItem('jwt') || null);
-  const [admin, setAdmin] = useState(false);
+  const [admin, setAdmin] = useState(localStorage.getItem('admin')||false);
 
   const login = (jwtToken) => {
     localStorage.setItem('jwt', jwtToken);
@@ -20,6 +20,7 @@ export const LoginProvider = ({ children }) => {
 
     if (typeUser && typeUser.includes('ROLE_ADMIN')) {
       setAdmin(true);
+      localStorage.setItem('admin',true)
     } else {
       setAdmin(false);
     }
@@ -27,6 +28,7 @@ export const LoginProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('jwt');
+    localStorage.removeItem('admin');
     setToken(null);
     setAdmin(false); 
   };

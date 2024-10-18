@@ -7,6 +7,8 @@ export const ShelfSensorLogs = () => {
   
     useEffect(() => {
       const fetchShelfLogs = async () => {
+
+        console.log('ShelfLogs fetched')
         try {
           const token = localStorage.getItem('jwt');
           const response = await axios.get('http://localhost:8080/api/track/shelf/logs', {
@@ -23,6 +25,8 @@ export const ShelfSensorLogs = () => {
       };
       
       fetchShelfLogs();
+      const intervalId = setInterval(fetchShelfLogs, 10000); 
+      return () => clearInterval(intervalId);
     }, []);
   
     return (
@@ -61,7 +65,10 @@ export const ShelfSensorLogs = () => {
     const [trialRoomLogs, setTrialRoomLogs] = useState([]);
   
     useEffect(() => {
+      
       const fetchTrialRoomLogs = async () => {
+
+        console.log('TrialRoom Logs fetched')
         try {
           const token = localStorage.getItem('jwt');
           const response = await axios.get('http://localhost:8080/api/track/trial/all', {
@@ -75,6 +82,10 @@ export const ShelfSensorLogs = () => {
         }
       };
       fetchTrialRoomLogs();
+
+      const intervalId = setInterval(fetchTrialRoomLogs, 10000); 
+      return () => clearInterval(intervalId);
+
     }, []);
   
     return (
@@ -111,6 +122,7 @@ export const ShelfSensorLogs = () => {
   
     useEffect(() => {
       const fetchPurchaseLogs = async () => {
+        console.log('PurchaseLogs fetched')
         try {
           const token = localStorage.getItem('jwt');
           const response = await axios.get('http://localhost:8080/api/track/purchase', {
@@ -124,6 +136,9 @@ export const ShelfSensorLogs = () => {
         }
       };
       fetchPurchaseLogs();
+
+      const intervalId = setInterval(fetchPurchaseLogs, 10000); 
+      return () => clearInterval(intervalId);
     }, []);
   
     return (
