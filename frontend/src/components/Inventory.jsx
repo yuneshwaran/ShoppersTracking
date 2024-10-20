@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState, useCallback } from "react";
 import { FaEdit, FaSave, FaPlus } from "react-icons/fa";
-import moment from "moment";
+import dayjs from 'dayjs';
 
 function Inventory() {
   
@@ -31,7 +31,7 @@ function Inventory() {
           price: item?.product?.price || 0,
           brand: item?.product?.brand?.name || "No Brand",
           quantity: item?.quantity || 0,
-          updated: item?.lastUpdated ? moment(item.lastUpdated).format("L") : "Not Available",
+          updated: item?.lastUpdated ? dayjs(item.lastUpdated).format("DD/MM/YYYY") : "Not Available",
         }));
         setProducts(mappedData);
         setFilteredProducts(mappedData);

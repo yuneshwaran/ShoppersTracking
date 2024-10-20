@@ -114,7 +114,7 @@ const AverageTimeByProduct = () => {
   }, [trialLogs, shelfLogs, selectedDuration, selectedBrand]);
 
   return (
-    <div className="container">
+    <div className="container" >
       <h2 className="text-light">Average Time Spent on Products</h2>
 
       <Row className="mb-4">

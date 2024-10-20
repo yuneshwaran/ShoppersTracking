@@ -25,7 +25,7 @@ public class UsersService {
         }
 
         //filter user role
-        if(user.getRole().contains("user")){
+        if(user.getRole().contains("admin")){
             user.setRole("ROLE_ADMIN");
         }
 

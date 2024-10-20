@@ -9,6 +9,7 @@ import Inventory from './components/Inventory';
 import Home from './components/Home';
 import Logs from './components/Logs';
 import Entity from './components/Entity';
+import ErrorPage from './components/ErrorPage';
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useLogin();
@@ -37,7 +38,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} /> 
           <Route path="/*" element={<MainPage />} />
-          
+          <Route path="*" element={ErrorPage}/>
         </Routes>
       </BrowserRouter>
     </LoginProvider>

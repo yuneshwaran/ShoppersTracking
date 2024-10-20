@@ -9,7 +9,7 @@ Chart.register(...registerables);
 
 const ShelfSensorLogs = () => {
   const [logs, setLogs] = useState([]);
-  const [timeRange, setTimeRange] = useState('1');
+  const [timeRange, setTimeRange] = useState('6');
   const [selectedShelf, setSelectedShelf] = useState('');
   const [shelves, setShelves] = useState([]);
 

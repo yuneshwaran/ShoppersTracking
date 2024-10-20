@@ -30,13 +30,7 @@ public class LoggingController {
     @Autowired
     private PurchaseLogService purchaseLogService;
 
-    //shelfSensorLogging
-
-    //Log the entry with the shelfId
-//    @PostMapping("/shelf/entry/{shelfId}")
-//    public ShelfSensorLog logEntry(@PathVariable int shelfId) {
-//        return shelfSensorLogService.logEntry(shelfId);
-//    }
+    //shelf entry
     @PostMapping("/shelf/entry")
     public int logEntry(@RequestBody ShelfSensor shelfSensor) {
 
@@ -44,13 +38,7 @@ public class LoggingController {
 
     }
 
-
-//    @PutMapping("/shelf/exit/{shelfId}")
-//    public ShelfSensorLog logExit(@RequestBody ShelfSensorLog log) {
-//        int id = log.getId();
-//        return shelfSensorLogService.logExit(id);
-//    }
-// Log the exit with the log id
+    // Log the exit with the log id
     @PutMapping("/shelf/exit")
     public String logExit(@RequestBody ShelfSensorLog log){
         String res = "Logged Exit with id :"+ shelfSensorLogService.logExit(log.getId());
@@ -77,12 +65,6 @@ public class LoggingController {
         TrialRoomLog log = trialRoomLogService.addTrialRoomLog(request.getTrialRoomId(), request.getProductId(), request.getCustomerId(),request.getHangerId());
         return ("Entry logged successfully with ID: " + log.getId());
     }
-//    // Log exit from the trial room
-//    @PostMapping("/trial/exit")
-//    public ResponseEntity<String> logExit(@RequestBody TrialRoomExitRequest request) {
-//        TrialRoomLog log = trialRoomLogService.logTrialRoomExit(request.getTrialRoomId(), request.getCustomerId());
-//        return ResponseEntity.ok("Exit logged successfully with ID: " + log.getId());
-//    }
 
 
     //get all trial room logs

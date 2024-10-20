@@ -3,8 +3,6 @@ import { useLogin } from './LoginContext';
 import {jwtDecode} from 'jwt-decode'; 
 import { useNavigate } from 'react-router-dom';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
-import axios from 'axios';
-
 
 
 export const AddUser=({ showModal, handleClose })=>{
@@ -14,8 +12,6 @@ const [NewPassword,setNewPassword] = useState('');
 const [role,setRole] = useState('user');
 const [error,setError] = useState(null);
 
-
-
 const validate =(value)=>{
   setNewUserName(value.trim())
 }
@@ -23,28 +19,38 @@ const validate =(value)=>{
 
 const handleSubmit = async(e) =>{
   e.preventDefault();
-  try{
 
+  try{
+      const token = localStorage.getItem('jwt');
+      const body = JSON.stringify({username : newUsername,password : NewPassword})
+      const response = await fetch('http://localhost:8080/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body,
+      });
+      
+      //alerts
+      if (response.ok) {
+        alert('User added successfully');
+        handleClose();
+      } else {
+        alert('Failed to add user');
+      }
+    
   }catch(e){
     console.log('Exception',e)
   }
 
-  const token = localStorage.getItem('jwt');
-  const body = JSON.stringify({username : newUsername,password : NewPassword})
-  const response = await fetch('http://localhost:8080/register', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
-    body,
-  });
+      
 
-  console.log(response);
-  if(response.ok){
-    alert("User added successfully")
-    handleClose();
-  }
+  // console.log(response);
+  // if(response.ok){
+  //   alert("User added successfully")
+  //   handleClose();
+  // }
 
 }
 
@@ -55,6 +61,7 @@ const handleSubmit = async(e) =>{
     </Modal.Header>
     <Modal.Body>
       <Form onSubmit={handleSubmit}>
+
         <Form.Group>
           <Form.Label>Username</Form.Label>
           <Form.Control

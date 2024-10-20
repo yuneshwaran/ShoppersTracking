@@ -36,7 +36,6 @@ const NavBar = () => {
 
   return (
     <Navbar expand="sm" bg="light" className="shadow mx-2" style={{ color: 'black' }}>
-      {/* <img style={{ maxWidth: '30px',marginRight:'10px'}} src={icon}/> */}
       <Navbar.Brand href="/" className="fs-4 badge bg-dark text-light">Shoppers Tracker</Navbar.Brand>
       
       <Navbar.Toggle aria-controls="navbar-nav" />
@@ -70,8 +69,8 @@ const NavBar = () => {
                 </Nav.Link>
               </Nav.Item>
                 <NavDropdown title="User Actions" id="basic-nav-dropdown" >
-                  <NavDropdown.Item disabled href="/add/product">Add Product</NavDropdown.Item>
-                  <NavDropdown.Item disabled href="/add/product">Add Brand</NavDropdown.Item>
+                  <NavDropdown.Item className={isAdmin?'':'disabled'} href="/add/product">Add Product</NavDropdown.Item>
+                  <NavDropdown.Item className={isAdmin?'':'disabled'} href="/add/product">Add Brand</NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item className={isAdmin?'':'disabled'} onClick={handleAddUserShow}>Add User</NavDropdown.Item>
                   <NavDropdown.Item  onClick={handleShow}>Update Password</NavDropdown.Item>

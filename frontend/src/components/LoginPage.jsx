@@ -15,7 +15,6 @@ const LoginPage = () => {
     setUsername(input.trim())
   }
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
