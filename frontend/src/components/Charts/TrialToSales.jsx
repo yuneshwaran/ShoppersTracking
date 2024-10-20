@@ -3,115 +3,89 @@ import { Bar } from 'react-chartjs-2';
 import { Form } from 'react-bootstrap';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import {Chart, registerables} from 'chart.js';
+import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
 const TrialToPurchase = () => {
-
+  
   const [trialLogs, setTrialLogs] = useState([]);
   const [purchaseLogs, setPurchaseLogs] = useState([]);
   const [chartData, setChartData] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState('All');
-  const [selectedDuration, setSelectedDuration] = useState('6m'); 
+  const [selectedDuration, setSelectedDuration] = useState('6m');
   const [brands, setBrands] = useState(['All']);
-  const token = localStorage.getItem('jwt');  
-
+  const token = localStorage.getItem('jwt');
 
   useEffect(() => {
     const fetchLogs = async () => {
-  
-      console.log("Fetch Trial Logs")
       try {
-        const trialResponse = await axios.get('http://localhost:8080/api/track/trial/all', {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
-        });
-        
-        const purchaseResponse = await axios.get('http://localhost:8080/api/track/purchase', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const [trialResponse, purchaseResponse] = await Promise.all([
+          axios.get('http://localhost:8080/api/track/trial/all', {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get('http://localhost:8080/api/track/purchase', {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
 
         setTrialLogs(trialResponse.data);
         setPurchaseLogs(purchaseResponse.data);
 
         const brandList = ['All', ...new Set(trialResponse.data.map(log => log.product.brand.name))];
         setBrands(brandList);
-        
       } catch (error) {
         console.error('Error fetching logs', error);
       }
     };
 
     fetchLogs();
-
-    const intervalId = setInterval(fetchLogs, 10000); 
+    const intervalId = setInterval(fetchLogs, 10000);
     return () => clearInterval(intervalId);
-
   }, [token]);
 
   const calculateStartDate = (duration) => {
-    switch (duration) {
-      case '1m':
-        return dayjs().subtract(1, 'month');
-      case '3m':
-        return dayjs().subtract(3, 'months');
-      case '6m':
-        return dayjs().subtract(6, 'months');
-      default:
-        return dayjs().subtract(10, 'years'); 
-    }
+    const months = { '1m': 1, '3m': 3, '6m': 6 };
+    return dayjs().subtract(months[duration] || 10, 'years');
   };
 
   useEffect(() => {
-
     const startDate = calculateStartDate(selectedDuration);
     const productData = {};
 
-    const filteredTrials = selectedBrand === 'All' ? 
-        trialLogs.filter(log => dayjs(log.entryTime).isAfter(startDate)) :
-        trialLogs.filter(log => log.product.brand.name === selectedBrand && dayjs(log.entryTime).isAfter(startDate));
+    const filteredTrials = trialLogs.filter(log =>
+      dayjs(log.entryTime).isAfter(startDate) &&
+      (selectedBrand === 'All' || log.product.brand.name === selectedBrand)
+    );
 
-    const filteredPurchases = selectedBrand === 'All' ? 
-        purchaseLogs.filter(log => dayjs(log.purchaseTime).isAfter(startDate)) :
-        purchaseLogs.filter(log => log.product.brand.name === selectedBrand && dayjs(log.purchaseTime).isAfter(startDate));
+    const filteredPurchases = purchaseLogs.filter(log =>
+      dayjs(log.purchaseTime).isAfter(startDate) &&
+      (selectedBrand === 'All' || log.product.brand.name === selectedBrand)
+    );
 
     filteredTrials.forEach(log => {
       const productName = log.product.name;
-      if (!productData[productName]) {
-        productData[productName] = { trials: 0, purchases: 0 };
-      }
-      productData[productName].trials += 1;
+      productData[productName] = { trials: (productData[productName]?.trials || 0) + 1, purchases: productData[productName]?.purchases || 0 };
     });
-
 
     filteredPurchases.forEach(log => {
       const productName = log.product.name;
-      if (!productData[productName]) {
-        productData[productName] = { trials: 0, purchases: 0 };
-      }
-      productData[productName].purchases += 1;
+      productData[productName] = { trials: productData[productName]?.trials || 0, purchases: (productData[productName]?.purchases || 0) + 1 };
     });
 
     const productNames = Object.keys(productData);
-    const trialsData = productNames.map(name => productData[name].trials);
-    const purchasesData = productNames.map(name => productData[name].purchases);
-
     setChartData({
       labels: productNames,
       datasets: [
         {
           label: 'Trials',
-          data: trialsData,
-          backgroundColor: 'rgba(255, 99, 132, 0.6)', 
+          data: productNames.map(name => productData[name].trials),
+          backgroundColor: 'rgba(255, 99, 132, 0.6)',
         },
         {
           label: 'Purchases',
-          data: purchasesData,
-          backgroundColor: 'rgba(54, 162, 235, 0.6)', 
+          data: productNames.map(name => productData[name].purchases),
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
         },
       ],
     });
@@ -123,23 +97,17 @@ const TrialToPurchase = () => {
 
       <div className='d-flex align-items-center mb-4'>
         <div className='container align-items-center'>
-          <div className='text-light'>Select Brand: </div>
-          <Form.Select
-            value={selectedBrand}
-            onChange={(e) => setSelectedBrand(e.target.value)}
-          >
-            {brands.map((brand) => (
+          <div className='text-light'>Select Brand:</div>
+          <Form.Select value={selectedBrand} onChange={e => setSelectedBrand(e.target.value)}>
+            {brands.map(brand => (
               <option key={brand} value={brand}>{brand}</option>
             ))}
           </Form.Select>
         </div>
 
         <div className='container align-items-center'>
-          <div className='text-light'>Select Duration: </div>
-          <Form.Select
-            value={selectedDuration}
-            onChange={(e) => setSelectedDuration(e.target.value)}
-          >
+          <div className='text-light'>Select Duration:</div>
+          <Form.Select value={selectedDuration} onChange={e => setSelectedDuration(e.target.value)}>
             <option value="1m">Last 1 Month</option>
             <option value="3m">Last 3 Months</option>
             <option value="6m">Last 6 Months</option>

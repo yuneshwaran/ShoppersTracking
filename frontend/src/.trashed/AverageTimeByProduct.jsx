@@ -5,10 +5,9 @@ import { Form, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
-
 Chart.register(...registerables);
 
-const AverageTimeByProduct = () => {
+const AverageTimeByBrand = () => {
   const [trialLogs, setTrialLogs] = useState([]);
   const [shelfLogs, setShelfLogs] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -21,19 +20,19 @@ const AverageTimeByProduct = () => {
   const calculateStartDate = (duration) => {
     switch (duration) {
       case '1m':
-        return dayjs().subtract(1, 'month');
+        return dayjs().subtract(1, 'month').startOf('day');
       case '3m':
-        return dayjs().subtract(3, 'months');
+        return dayjs().subtract(3, 'months').startOf('day');
       case '6m':
-        return dayjs().subtract(6, 'months');
+        return dayjs().subtract(6, 'months').startOf('day');
       default:
-        return dayjs().subtract(10, 'years'); 
+        return dayjs().subtract(10, 'years').startOf('day');
     }
   };
 
   useEffect(() => {
     const fetchLogs = async () => {
-      console.log('All logs fetched')
+      console.log('All logs fetched');
       try {
         const trialResponse = await axios.get('http://localhost:8080/api/track/trial/all', {
           headers: { Authorization: `Bearer ${token}` },
@@ -55,21 +54,20 @@ const AverageTimeByProduct = () => {
 
     const intervalId = setInterval(fetchLogs, 10000); 
     return () => clearInterval(intervalId);
-
-    
   }, [token]);
 
   useEffect(() => {
     const startDate = calculateStartDate(selectedDuration);
 
     const filteredTrialLogs = trialLogs.filter(log => 
-      dayjs(log.entryTime).isAfter(startDate) && (selectedBrand ? log.product.brand.name === selectedBrand : true)
+      dayjs(log.entryTime).isAfter(startDate) && 
+      (selectedBrand ? log.product.brand.name === selectedBrand : true)
     );
 
-    const productTimes = {};
+    const dailyBrandTimes = {}; // To track total time per brand per day
 
     filteredTrialLogs.forEach(log => {
-      const productName = log.product.name;
+      const productBrand = log.product.brand.name;
       const shelfLog = shelfLogs.find(shelfLog => 
         shelfLog.shelf.id === log.product.shelf.id && 
         dayjs(shelfLog.exitTime).isAfter(log.entryTime) 
@@ -80,42 +78,63 @@ const AverageTimeByProduct = () => {
           ? dayjs(shelfLog.exitTime).diff(dayjs(log.entryTime), 'minute')
           : dayjs().diff(dayjs(log.entryTime), 'minute');
 
-        if (!productTimes[productName]) {
-          productTimes[productName] = { totalTime: 0, count: 0 };
+        const date = dayjs(log.entryTime).format('YYYY-MM-DD');
+
+        if (!dailyBrandTimes[date]) {
+          dailyBrandTimes[date] = {}; // Create entry for this date
         }
 
-        productTimes[productName].totalTime += trialTime;
-        productTimes[productName].count += 1;
+        if (!dailyBrandTimes[date][productBrand]) {
+          dailyBrandTimes[date][productBrand] = { totalTime: 0, entryCount: 0 };
+        }
+
+        dailyBrandTimes[date][productBrand].totalTime += trialTime;
+        dailyBrandTimes[date][productBrand].entryCount += 1;
+
+        // Log the total time for debugging
+        console.log(`Brand: ${productBrand}, Date: ${date}, Trial Time: ${trialTime} minutes`);
       }
     });
 
-    const productNames = Object.keys(productTimes);
-    const avgTimes = productNames.map(name => 
-      (productTimes[name].totalTime / (productTimes[name].count * 60)).toFixed(2) 
-    );
-
-    if (productNames.length > 0 && avgTimes.length > 0) {
-      setChartData({
-        labels: productNames,
-        datasets: [
-          {
-            label: 'Average Time (hours)',
-            data: avgTimes,
-            backgroundColor: 'rgba(75, 192, 192, 0.6)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1,
-            
-          },
-        ],
+    // Calculate daily average per brand
+    const dailyAverages = Object.keys(dailyBrandTimes).map(date => {
+      const brandData = dailyBrandTimes[date];
+      const averagesForDate = {};
+      
+      Object.keys(brandData).forEach(brand => {
+        const { totalTime, entryCount } = brandData[brand];
+        averagesForDate[brand] = totalTime / entryCount; // Average time in minutes for this brand
       });
-    } else {
-      setChartData(null);
-    }
+
+      return { date, averagesForDate };
+    });
+
+    // Prepare chart data by mapping daily averages for the selected brand
+    const labels = dailyAverages.map(avg => avg.date);
+    const avgTimes = dailyAverages.map(avg => {
+      const brandAvg = avg.averagesForDate[selectedBrand] || 0; 
+      return (brandAvg / 60).toFixed(2); // Convert minutes to hours
+    });
+
+    console.log(`Daily Average for ${selectedBrand}:`, avgTimes);
+
+    setChartData({
+      labels,
+      datasets: [
+        {
+          label: `Average Time (hours) for ${selectedBrand}`,
+          data: avgTimes,
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1,
+        },
+      ],
+    });
   }, [trialLogs, shelfLogs, selectedDuration, selectedBrand]);
 
   return (
-    <div className="container" >
-      <h2 className="text-light">Average Time Spent on Products</h2>
+    <div className="container">
+      <h2 className="text-light">Average Time Spent on Products by Brand</h2>
 
       <Row className="mb-4">
         <Col>
@@ -155,4 +174,4 @@ const AverageTimeByProduct = () => {
   );
 };
 
-export default AverageTimeByProduct;
+export default AverageTimeByBrand;

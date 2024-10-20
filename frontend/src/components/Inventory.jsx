@@ -117,7 +117,7 @@ function Inventory() {
   };
 
   return (
-    <div>
+    <div style={{maxWidth:'98%'}}>
       {error && <div className="alert alert-danger">{error}</div>}
 
         <div className="row border p-3 mb-4 align-items-center">

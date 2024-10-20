@@ -96,3 +96,86 @@ INSERT INTO trial_room_log (customer_id, entry_time, product_id, trial_room_id, 
 (130, '2024-08-30 14:53:05', 28, 7, 22),
 (118, '2024-08-03 10:10:05', 18, 5, 15),
 (116, '2024-09-07 11:12:05', 20, 8, 17);
+
+-- Insert random shelf sensor log entries for 2-3 months (Aug 2024 - Oct 2024)
+DECLARE @i INT = 1;
+DECLARE @numRecords INT = 100;  -- Set how many records you want to generate
+DECLARE @shelf_ids TABLE (id INT);  -- Create a table to hold shelf ids
+
+-- Insert the shelf ids into the temp table
+INSERT INTO @shelf_ids (id)
+VALUES (1), (2), (3), (4), (6), (7), (8);
+
+WHILE @i <= @numRecords
+BEGIN
+    DECLARE @randomShelfId INT;
+    DECLARE @entry_time DATETIME2(6);
+    DECLARE @exit_time DATETIME2(6);
+    
+    -- Select a random shelf_id from the table
+    SELECT @randomShelfId = id
+    FROM @shelf_ids
+    ORDER BY NEWID();
+    
+    -- Generate random entry_time between Aug 1, 2024, and Oct 31, 2024
+    SET @entry_time = DATEADD(SECOND, ABS(CHECKSUM(NEWID()) % 86400), 
+                     DATEADD(DAY, ABS(CHECKSUM(NEWID()) % 92), '2024-08-01T00:00:00.000'));
+    
+    -- Generate random exit_time (within a range of 1 to 3600 seconds after entry_time)
+    SET @exit_time = DATEADD(SECOND, ABS(CHECKSUM(NEWID()) % 3600), @entry_time);
+
+    -- Insert the generated data into the shelf_sensor_log table
+    INSERT INTO [dbo].[shelf_sensor_log] (entry_time, exit_time, shelf_id)
+    VALUES (@entry_time, @exit_time, @randomShelfId);
+    
+    -- Increment the loop counter
+    SET @i = @i + 1;
+END;
+
+-- Verify that records were inserted
+SELECT * FROM [dbo].[shelf_sensor_log];
+
+
+--trial logs entry 
+-- Generate random data for purchase_log table
+DECLARE @MinDate DATE = '2024-04-01'; -- 6 months before October 2024
+DECLARE @MaxDate DATE = '2024-10-31'; -- End of October 2024
+DECLARE @Counter INT = 1;
+
+WHILE @Counter <= 30 -- Adjust number of entries as needed
+BEGIN
+    INSERT INTO [dbo].[purchase_log] (purchase_date, quantity, total_price, product_id)
+    VALUES (
+        -- Random date between @MinDate and @MaxDate
+        DATEADD(DAY, ABS(CHECKSUM(NEWID())) % (DATEDIFF(DAY, @MinDate, @MaxDate) + 1), @MinDate), 
+        -- Random quantity between 1 and 10
+        ABS(CHECKSUM(NEWID())) % 10 + 1, 
+        -- Random total price between 300 and 3000
+        CAST((ABS(CHECKSUM(NEWID())) % 2701 + 300) AS FLOAT), 
+        -- Random product_id from the given list
+        CASE ABS(CHECKSUM(NEWID())) % 17
+            WHEN 0 THEN 3
+            WHEN 1 THEN 5
+            WHEN 2 THEN 7
+            WHEN 3 THEN 9
+            WHEN 4 THEN 11
+            WHEN 5 THEN 13
+            WHEN 6 THEN 16
+            WHEN 7 THEN 18
+            WHEN 8 THEN 20
+            WHEN 9 THEN 22
+            WHEN 10 THEN 21
+            WHEN 11 THEN 24
+            WHEN 12 THEN 26
+            WHEN 13 THEN 28
+            WHEN 14 THEN 30
+            WHEN 15 THEN 32
+            WHEN 16 THEN 34
+            ELSE 35 -- Default, in case of unexpected value
+        END
+    );
+    
+    SET @Counter = @Counter + 1;
+END;
+
+

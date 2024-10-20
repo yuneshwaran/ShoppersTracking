@@ -38,32 +38,29 @@ const SalesPieChart = () => {
   const filterLogsByMonth = (logs, dateField) => {
     const startOfMonth = currentMonth.startOf('month');
     const endOfMonth = currentMonth.endOf('month');
-
     return logs.filter(log => {
       const logDate = dayjs(log[dateField]);
       return logDate.isAfter(startOfMonth) && logDate.isBefore(endOfMonth);
     });
   };
 
-
   const calculateSalesData = () => {
     const filteredTrials = filterLogsByMonth(trialLogs, 'entryTime');
     const filteredPurchases = filterLogsByMonth(purchaseLogs, 'purchaseDate');
 
-    let totalSales = filteredPurchases.length;
     let salesAfterTrials = 0;
     let salesWithoutTrials = 0;
 
     filteredPurchases.forEach(purchase => {
       const matchingTrial = filteredTrials.find(trial => trial.product.id === purchase.product.id);
-      if (matchingTrial) {
-        salesAfterTrials += 1;
-      } else {
-        salesWithoutTrials += 1;
-      }
+      matchingTrial ? salesAfterTrials += 1 : salesWithoutTrials += 1;
     });
 
-    return { totalSales, salesAfterTrials, salesWithoutTrials };
+    return {
+      totalSales: filteredPurchases.length,
+      salesAfterTrials,
+      salesWithoutTrials
+    };
   };
 
   useEffect(() => {
@@ -80,21 +77,12 @@ const SalesPieChart = () => {
     });
   }, [trialLogs, purchaseLogs, currentMonth]);
 
-
-  const handlePrevMonth = () => {
-    setCurrentMonth(currentMonth.subtract(1, 'month'));
-  };
-
-  const handleNextMonth = () => {
-
-    if (currentMonth.isBefore(today, 'month')) {
-      setCurrentMonth(currentMonth.add(1, 'month'));
-    }
-  };
+  const handlePrevMonth = () => setCurrentMonth(currentMonth.subtract(1, 'month'));
+  const handleNextMonth = () => currentMonth.isBefore(today, 'month') && setCurrentMonth(currentMonth.add(1, 'month'));
 
   return (
-    <div className="container" style={{ maxHeight: "50%", width: "50%" }}>
-      <h2 className="badge text-light fs-4">Sales Analysis for {currentMonth.format('MMMM YYYY')}</h2>
+    <div className="container" style={{ maxHeight: "50%", width: "60%" }}>
+      <h2 className="badge text-light fs-4">Sales Analysis for {currentMonth.format('MMM YYYY')}</h2>
 
       <div className="d-flex justify-content-between mb-4">
         <Button variant="primary" onClick={handlePrevMonth}>Previous Month</Button>
@@ -102,16 +90,7 @@ const SalesPieChart = () => {
       </div>
 
       {chartData ? (
-        <Pie
-          data={chartData}
-          options={{
-            responsive: true,
-            plugins: {
-              legend: { position: 'top' },
-              tooltip: { enabled: true },
-            },
-          }}
-        />
+        <Pie data={chartData} options={{ responsive: true, plugins: { legend: { position: 'top' }, tooltip: { enabled: true } } }} />
       ) : (
         <p>Loading chart...</p>
       )}
