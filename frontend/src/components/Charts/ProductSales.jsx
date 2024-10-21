@@ -8,6 +8,7 @@ import { Button } from 'react-bootstrap';
 Chart.register(...registerables);
 
 const ProductSales = () => {
+    
     const [purchaseLogs, setPurchaseLogs] = useState([]);
     const [brands, setBrands] = useState([]);
     const [chartData, setChartData] = useState(null);

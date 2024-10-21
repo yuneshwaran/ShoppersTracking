@@ -30,7 +30,7 @@ export const ShelfSensorLogs = () => {
     }, []);
   
     return (
-      <div className="log-list-container">
+      <div className="container">
         <h3 className="text-light mb-3">Shelf Logs</h3>
         <div className="table-responsive">
           <table className="table table-dark table-striped">
@@ -89,7 +89,7 @@ export const ShelfSensorLogs = () => {
     }, []);
   
     return (
-      <div className="log-list-container">
+      <div className="container">
         <h3 className="text-light mb-3">Trial Room Logs</h3>
         <div className="table-responsive">
           <table className="table table-dark table-striped">
@@ -142,7 +142,7 @@ export const ShelfSensorLogs = () => {
     }, []);
   
     return (
-      <div className="log-list-container">
+      <div className="container">
         <h3 className="text-light mb-3">Purchase Logs</h3>
         <div className="table-responsive">
           <table className="table table-dark table-striped">

@@ -57,7 +57,7 @@ const handleSubmit = async(e) =>{
   return (
     <Modal show={showModal} onHide={handleClose}>
     <Modal.Header closeButton>
-      <Modal.Title>New User</Modal.Title>
+      <Modal.Title>Create Login</Modal.Title>
     </Modal.Header>
     <Modal.Body>
       <Form onSubmit={handleSubmit}>

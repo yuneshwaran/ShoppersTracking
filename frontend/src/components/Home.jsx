@@ -10,7 +10,7 @@ function Home() {
     <div className="home-container">
 
       <Carousel className="home-carousel">
-        <Carousel.Item interval={1500}>
+        <Carousel.Item interval={3000}>
           <img src={shelf} alt="Hanger" className="carousel-image" />
           <Carousel.Caption>
             <h3>Track user interactions with products. </h3>
@@ -18,7 +18,7 @@ function Home() {
           </Carousel.Caption>
         </Carousel.Item>
 
-        <Carousel.Item interval={1500}>
+        <Carousel.Item interval={3000}>
           <img src={storage} alt="Storage" className="carousel-image" />
           <Carousel.Caption className='shadow'>
             <h3>Inventory management along with purchase logging.</h3>
@@ -26,7 +26,7 @@ function Home() {
           </Carousel.Caption>
         </Carousel.Item>
 
-        <Carousel.Item interval={1500}>
+        <Carousel.Item interval={3000}>
           <img src={entrance} alt="Entrance" className="carousel-image" />
           <Carousel.Caption>
             <h3 >Insight generation to help better understand the customer.</h3>

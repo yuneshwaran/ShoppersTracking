@@ -43,8 +43,7 @@ const SalesYearReport = () => {
 
     setChartData({
       labels: [
-        'January', 'February', 'March', 'April', 'May', 'June', 
-        'July', 'August', 'September', 'October', 'November', 'December'
+        'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
       ],
       datasets: [{
         label: 'Total Sales Per Month (₹)',

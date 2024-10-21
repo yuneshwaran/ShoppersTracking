@@ -32,8 +32,10 @@ const ShelfSensorLogs = () => {
       }
     };
     fetchLogs();
+
     const intervalId = setInterval(fetchLogs, 10000);
     return () => clearInterval(intervalId);
+
   }, [selectedShelf]);
 
   const filteredLogs = logs.filter(log => {
@@ -73,7 +75,7 @@ const ShelfSensorLogs = () => {
   const selectedMonthYear = dayjs().subtract(monthOffset, 'month').format('MMMM YYYY');
 
   return (
-    <div className="container">
+    <div className="container ">
       <h2 className="badge text-light fs-4">{`Average Time per Shelf of : ${selectedMonthYear}`}</h2>
       <div className="d-flex justify-content-between mb-3">
         <Button variant="primary" onClick={handlePreviousMonth}>Previous Month</Button>
