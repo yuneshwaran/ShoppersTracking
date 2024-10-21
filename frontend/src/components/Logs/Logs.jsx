@@ -1,7 +1,7 @@
 import { NavLink, Routes, Route } from "react-router-dom";
 import Nav from 'react-bootstrap/Nav';
-import {PurchaseLogs, ShelfSensorLogs, TrialRoomLog} from './Logs/AllLogs';
-import './Styles.css';
+import {PurchaseLogs, ShelfSensorLogs, TrialRoomLog} from './AllLogs';
+import '../Styles.css';
 
 
 const Logs = () => {

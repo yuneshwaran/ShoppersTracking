@@ -1,8 +1,8 @@
 import { NavLink, Routes, Route } from "react-router-dom";
 import Nav from 'react-bootstrap/Nav';
-import { Shelves, HangerSensor } from "./Entities/Entities";
-import Products from './Entities/Products';
-import './Styles.css';
+import { Shelves, HangerSensor } from "./Entities";
+import Products from './Products';
+import '../Styles.css';
 
 
 const Entity = () => {

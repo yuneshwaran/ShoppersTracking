@@ -1,14 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'; 
-import './App.css';
 import LoginPage from './components/LoginPage';
 import { LoginProvider, useLogin } from './utils/LoginContext';
 import NavBar from './components/Navbar';
 import { Insights } from './components/Insights';
 import Inventory from './components/Inventory';
 import Home from './components/Home';
-import Logs from './components/Logs';
-import Entity from './components/Entity';
+import Logs from './components/Logs/Logs';
+import Entity from './components/Entities/EntityMain';
 import ErrorPage from './components/ErrorPage';
 import { AddEntities } from './components/Entities/AddEntities';
 

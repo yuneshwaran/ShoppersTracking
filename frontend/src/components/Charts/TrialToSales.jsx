@@ -93,8 +93,6 @@ const TrialToPurchase = () => {
         </Form.Select>
       </div>
 
-
-
       {chartData ? (
         <Bar
           data={chartData}

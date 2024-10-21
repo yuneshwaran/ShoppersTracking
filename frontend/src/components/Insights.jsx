@@ -35,9 +35,7 @@ export const Insights = () => {
               Trial : Sales
             </Nav.Link>
           </Nav.Item>
-          
-          
-          
+             
         </Nav>
       </div>
 
