@@ -14,33 +14,29 @@ export const Insights = () => {
         <Nav variant="tabs" className="nav-fill m-2 justify-content-center">
 
           <Nav.Item>
-            <Nav.Link as={NavLink} to="salesyear" className={({ isActive }) => (isActive ? "active" : "")}>
+            <Nav.Link as={NavLink} to="yearly-sales" className={({ isActive }) => (isActive ? "active" : "")}>
               Yearly Sales
             </Nav.Link>
           </Nav.Item>
-          
-          {/* <Nav.Item>
-            <Nav.Link as={NavLink} to="salestrials" className={({ isActive }) => (isActive ? "active" : "")}>
-              Sales   
-            </Nav.Link>
-          </Nav.Item> */}
 
           <Nav.Item>
-            <Nav.Link as={NavLink} to="shelf" className={({ isActive }) => (isActive ? "active" : "")}>
+            <Nav.Link as={NavLink} to="prod-sales" className={({ isActive }) => (isActive ? "active" : "")}>
+              Product Sales
+            </Nav.Link>
+          </Nav.Item>
+
+          <Nav.Item>
+            <Nav.Link as={NavLink} to="avg-time" className={({ isActive }) => (isActive ? "active" : "")}>
               Average Time
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link as={NavLink} to="ratio" className={({ isActive }) => (isActive ? "active" : "")}>
+            <Nav.Link as={NavLink} to="trial-sales" className={({ isActive }) => (isActive ? "active" : "")}>
               Trial : Sales
             </Nav.Link>
           </Nav.Item>
           
-          <Nav.Item>
-            <Nav.Link as={NavLink} to="prodsales" className={({ isActive }) => (isActive ? "active" : "")}>
-              Product Sales
-            </Nav.Link>
-          </Nav.Item>
+          
           
         </Nav>
       </div>
@@ -48,7 +44,7 @@ export const Insights = () => {
       <div>
         <Routes>
           <Route
-            path="shelf"
+            path="avg-time"
             element={
               <div className="col p-2 flex-grow-1 bg-dark rounded" style={{ maxWidth: "100%" }}>
                 <ShelfSensorLogs />
@@ -56,7 +52,7 @@ export const Insights = () => {
             }
           />
           <Route
-            path="ratio"
+            path="trial-sales"
             element={
               <div className="col p-2 flex-grow-1 bg-dark rounded" style={{ maxWidth: "100%" }}>
                 <TrialToPurchase />
@@ -64,23 +60,7 @@ export const Insights = () => {
             }
           />
           <Route
-            path="avg-time"
-            element={
-              <div className="col p-2 flex-grow-1 bg-dark rounded" style={{ maxWidth: "100%" }}>
-                <AverageTimeByProduct />
-              </div>
-            }
-          />
-          <Route
-            path="salestrials"
-            element={
-              <div className="col p-2 flex-grow-1 bg-dark rounded"  style={{ maxWidth: "100%" }} >
-                <SalesPieChart  />
-              </div>
-            }
-          />
-          <Route
-            path="salesyear"
+            path="yearly-sales"
             element={
               <div className="col p-2 flex-grow-1 bg-dark rounded"  style={{ maxWidth: "100%" }} >
                 <SalesYearReport  />
@@ -88,7 +68,7 @@ export const Insights = () => {
             }
           />
           <Route
-            path="prodsales"
+            path="prod-sales"
             element={
               <div className="col p-2 flex-grow-1 bg-dark rounded"  style={{ maxWidth: "100%" }} >
                 <ProductSales  />

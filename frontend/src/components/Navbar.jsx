@@ -45,7 +45,7 @@ const NavBar = () => {
           {isLoggedIn() && (
             <>
               <Nav.Item className='border '>
-                <Nav.Link as={NavLink} to="/insights/salesyear" className={({ isActive }) => isActive ? 'active' : ''}>
+                <Nav.Link as={NavLink} to="/insights/yearly-sales" className={({ isActive }) => isActive ? 'active' : ''}>
                   <img style={{ maxWidth: '25px',marginRight:'2px'}} src={chart}/>
                   Insights
                 </Nav.Link>
