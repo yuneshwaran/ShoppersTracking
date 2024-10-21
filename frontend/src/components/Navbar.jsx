@@ -9,6 +9,8 @@ import entity from '../assets/icons/entity.png'
 import inventory from '../assets/icons/inventory.png'
 import chart from '../assets/icons/chart.png';
 import logs from '../assets/icons/logs.png'
+import user from '../assets/icons/user.png'
+import update from '../assets/icons/updatepassword.png'
 
 const NavBar = () => {
   const { logout, isLoggedIn ,admin} = useLogin();
@@ -68,12 +70,20 @@ const NavBar = () => {
                   Entities
                 </Nav.Link>
               </Nav.Item>
-                <NavDropdown title="User Actions" id="basic-nav-dropdown" >
-                  <NavDropdown.Item className={isAdmin?'':'disabled'} href="/add/product">Add Product</NavDropdown.Item>
-                  <NavDropdown.Item className={isAdmin?'':'disabled'} href="/add/product">Add Brand</NavDropdown.Item>
+              
+                <NavDropdown title='User Actions' id="basic-nav-dropdown" className='border' >
+                  
+                  <NavDropdown.Item className={isAdmin?'disabled':'disabled'} href="/add/product">Add Product</NavDropdown.Item>
+                  <NavDropdown.Item className={isAdmin?'disabled':'disabled'} href="/add/brand">Add Brand</NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item className={isAdmin?'':'disabled'} onClick={handleAddUserShow}>Add User</NavDropdown.Item>
-                  <NavDropdown.Item  onClick={handleShow}>Update Password</NavDropdown.Item>
+                  <NavDropdown.Item className={isAdmin?'':'disabled '} onClick={handleAddUserShow}>
+                    <img style={{ maxWidth: '20px',marginRight:'5px'}} src={user}/>
+                    Add User
+                  </NavDropdown.Item>
+                  <NavDropdown.Item  onClick={handleShow}>
+                    <img style={{ maxWidth: '20px',marginRight:'5px'}} src={update}/>
+                    Update Password
+                  </NavDropdown.Item>
                 </NavDropdown>
                 
               <AddUser showModal={showAddUser} handleClose={handleAddUserClose} />

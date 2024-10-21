@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import ShelfSensorLogs from "./Charts/AverageTimeShelf";
 import TrialToPurchase from "./Charts/TrialToSales";
 import AverageTimeByProduct from "../.trashed/AverageTimeByProduct";
-import SalesPieChart from "./Charts/SalesbyTrials";
+import SalesPieChart from "../.trashed/SalesbyTrials";
 import SalesYearReport from "./Charts/SalesYearReport";
 import ProductSales from "./Charts/ProductSales";
 
