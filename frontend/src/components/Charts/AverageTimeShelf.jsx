@@ -77,18 +77,20 @@ const ShelfSensorLogs = () => {
   return (
     <div className="container ">
       <h2 className="badge text-light fs-4">{`Average Time per Shelf of : ${selectedMonthYear}`}</h2>
+      
       <div className="d-flex justify-content-between mb-3">
         <Button variant="primary" onClick={handlePreviousMonth}>Previous Month</Button>
+          <div className="d-flex justify-content-center align-items-center ">
+            <span className="text-light me-3">Shelf:</span>
+            <Form.Select className="w-auto" onChange={(e) => setSelectedShelf(Number(e.target.value))} value={selectedShelf}>
+              {shelves.map(shelf => (
+                <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
+              ))}
+            </Form.Select>
+          </div>
         <Button variant="primary" onClick={handleNextMonth} disabled={monthOffset === 0}>Next Month</Button>
       </div>
-      <div className="d-flex justify-content-center align-items-center mb-4">
-        <span className="text-light me-2">Shelf:</span>
-        <Form.Select className="w-auto" onChange={(e) => setSelectedShelf(Number(e.target.value))} value={selectedShelf}>
-          {shelves.map(shelf => (
-            <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
-          ))}
-        </Form.Select>
-      </div>
+      
       <div className="row">
         <Line data={chartData} />
       </div>

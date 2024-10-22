@@ -4,12 +4,11 @@ import {jwtDecode} from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 
-
 export const AddUser=({ showModal, handleClose })=>{
 
 const [newUsername , setNewUserName] = useState('');
 const [NewPassword,setNewPassword] = useState('');
-const [role,setRole] = useState('user');
+// const [role,setRole] = useState('user');
 const [error,setError] = useState(null);
 
 const validate =(value)=>{
@@ -43,14 +42,6 @@ const handleSubmit = async(e) =>{
   }catch(e){
     console.log('Exception',e)
   }
-
-      
-
-  // console.log(response);
-  // if(response.ok){
-  //   alert("User added successfully")
-  //   handleClose();
-  // }
 
 }
 

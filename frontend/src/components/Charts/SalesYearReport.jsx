@@ -63,7 +63,7 @@ const SalesYearReport = () => {
       <h2 className="badge text-light fs-4">Total Sales Per Month for {currentYear}</h2>
       <div className="d-flex justify-content-between mb-4">
         <Button variant="primary" onClick={handlePrevYear}>Previous Year</Button>
-        <Button variant="primary" onClick={handleNextYear}>Next Year</Button>
+        <Button variant="primary" onClick={handleNextYear} >Next Year</Button>
       </div>
       {chartData ? (
         <Line

@@ -7,7 +7,7 @@ import { Button } from 'react-bootstrap';
 
 Chart.register(...registerables);
 
-const ProductSales = () => {
+const BrandSales = () => {
     
     const [purchaseLogs, setPurchaseLogs] = useState([]);
     const [brands, setBrands] = useState([]);
@@ -29,6 +29,7 @@ const ProductSales = () => {
     }, [token]);
 
     const calculateSalesDataForMonth = (month, year) => {
+        
         const salesPerBrand = Object.fromEntries(brands.map(brand => [brand.name, 0]));
 
         purchaseLogs.forEach(purchase => {
@@ -44,7 +45,7 @@ const ProductSales = () => {
     useEffect(() => {
         const currentMonth = dayjs().month();
         const monthToDisplay = (currentMonth - monthOffset + 12) % 12;
-        const adjustedYear = dayjs().year() + Math.floor((currentMonth - monthOffset) / 12);
+        const adjustedYear = dayjs().year() + Math.floor((currentMonth - monthOffset) / 12);    
 
         const salesData = calculateSalesDataForMonth(monthToDisplay, adjustedYear);
         const salesCounts = brands.map(brand => salesData[brand.name] || 0);
@@ -67,7 +68,7 @@ const ProductSales = () => {
     return (
         <div className="container" style={{ maxWidth: '100%' }}>
             <h2 className="badge text-light fs-4">
-                Sales Per Brand for {dayjs().subtract(monthOffset, 'month').format('MMMM YYYY')}
+                Unit Sales Per Brand for {dayjs().subtract(monthOffset, 'month').format('MMMM YYYY')}
             </h2>
             <div className="d-flex justify-content-between mb-4">
                 <Button variant="primary" onClick={handlePreviousMonth}>Previous Month</Button>
@@ -95,4 +96,4 @@ const ProductSales = () => {
     );
 };
 
-export default ProductSales;
+export default BrandSales;

@@ -76,22 +76,23 @@ const TrialToPurchase = () => {
   return (
     <div className='container'>
 
-      <h2 className='badge text-light fs-4'>Trials to Sales Ratio</h2>
+      <h2 className='badge text-light fs-4'>Trials to Sales Ratio of {currentMonth.format('MMMM YYYY')}</h2>
 
-      <div className='d-flex justify-content-between align-items-center mb-4'>
+      <div className='d-flex justify-content-between  mb-4'>
         <Button variant='primary' onClick={() => handleMonthChange(-1)}>Previous Month</Button>
-        <span className='mx-5 text-light fs-5'>{currentMonth.format('MMMM YYYY')}</span>
+          <div className='d-flex justify-content-center'>
+            <span className='me-3 text-light fs-5'>Select Brand:</span>
+
+            <Form.Select className='w-auto' value={selectedBrand} onChange={e => setSelectedBrand(e.target.value)}>
+              {brands.map(brand => (
+                <option key={brand} value={brand}>{brand}</option>
+              ))}
+            </Form.Select>
+          </div>
         <Button variant='primary' onClick={() => handleMonthChange(1)}>Next Month</Button>
       </div>
 
-      <div className='d-flex justify-content-center align-items-center mb-4'>
-        <span className='me-3 text-light fs-5'>Select Brand:</span>
-        <Form.Select className='w-auto' value={selectedBrand} onChange={e => setSelectedBrand(e.target.value)}>
-          {brands.map(brand => (
-            <option key={brand} value={brand}>{brand}</option>
-          ))}
-        </Form.Select>
-      </div>
+      
 
       {chartData ? (
         <Bar

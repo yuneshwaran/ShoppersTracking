@@ -2,10 +2,8 @@ import { NavLink, Routes, Route } from "react-router-dom";
 import Nav from 'react-bootstrap/Nav';
 import ShelfSensorLogs from "./Charts/AverageTimeShelf";
 import TrialToPurchase from "./Charts/TrialToSales";
-import AverageTimeByProduct from "../.trashed/AverageTimeByProduct";
-import SalesPieChart from "../.trashed/SalesbyTrials";
 import SalesYearReport from "./Charts/SalesYearReport";
-import ProductSales from "./Charts/ProductSales";
+import BrandSales from "./Charts/BrandSales";
 
 export const Insights = () => {
   return (
@@ -21,7 +19,7 @@ export const Insights = () => {
 
           <Nav.Item>
             <Nav.Link as={NavLink} to="prod-sales" className={({ isActive }) => (isActive ? "active" : "")}>
-              Product Sales
+              Unit Sales
             </Nav.Link>
           </Nav.Item>
 
@@ -38,7 +36,6 @@ export const Insights = () => {
              
         </Nav>
       </div>
-
       <div>
         <Routes>
           <Route
@@ -69,7 +66,7 @@ export const Insights = () => {
             path="prod-sales"
             element={
               <div className="col p-2 flex-grow-1 bg-dark rounded"  style={{ maxWidth: "100%" }} >
-                <ProductSales  />
+                <BrandSales  />
               </div>
             }
           />
