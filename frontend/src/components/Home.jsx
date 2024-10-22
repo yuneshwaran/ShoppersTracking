@@ -14,7 +14,6 @@ function Home() {
           <img src={shelf} alt="Hanger" className="carousel-image" />
           <Carousel.Caption>
             <h3>Track user interactions with products. </h3>
-          
           </Carousel.Caption>
         </Carousel.Item>
 
@@ -39,9 +38,6 @@ function Home() {
         <About/>  
       </div>
 
-      <footer className="footer">
-        <p> </p>
-      </footer>
     </div>
   );
 }

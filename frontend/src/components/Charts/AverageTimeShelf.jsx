@@ -17,21 +17,33 @@ const ShelfSensorLogs = () => {
     const fetchLogs = async () => {
       try {
         const token = localStorage.getItem('jwt');
-        const response = await axios.get('http://localhost:8080/api/track/shelf/logs', {
+        const logResponse = await axios.get('http://localhost:8080/api/track/shelf/logs', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setLogs(response.data);
-        const uniqueShelves = [...new Set(response.data.map(log => log.shelf.id))]
-          .map(id => response.data.find(log => log.shelf.id === id).shelf);
-        setShelves(uniqueShelves);
-        if (!selectedShelf && uniqueShelves.length > 0) {
-          setSelectedShelf(uniqueShelves[0].id);
-        }
+        setLogs(logResponse.data);
       } catch (error) {
         console.error('Error fetching shelf logs:', error);
       }
     };
+
+    const fetchShelves = async () => {
+      try {
+        const token = localStorage.getItem('jwt');
+        const shelfResponse = await axios.get('http://localhost:8080/api/shelf', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setShelves(shelfResponse.data);
+        
+        if (!selectedShelf && shelfResponse.data.length > 0) {
+          setSelectedShelf(shelfResponse.data[0].id);
+        }
+      } catch (error) {
+        console.error('Error fetching shelves:', error);
+      }
+    };
+
     fetchLogs();
+    fetchShelves();
 
     const intervalId = setInterval(fetchLogs, 10000);
     return () => clearInterval(intervalId);
@@ -44,14 +56,13 @@ const ShelfSensorLogs = () => {
     return entryDate.isSame(now, 'month') && log.shelf.id === selectedShelf;
   });
 
-  const aggregatedData = filteredLogs.reduce((acc, log) => {
-    const date = dayjs(log.entryTime).format('YYYY-MM-DD');
-    const duration = dayjs(log.exitTime).diff(dayjs(log.entryTime), 'minute');
-    acc[date] = acc[date] || { totalDuration: 0, count: 0 };
-    acc[date].totalDuration += duration;
-    acc[date].count += 1;
-    return acc;
-  }, {});
+    const aggregatedData = filteredLogs.reduce((acc, log) => {
+      const date = dayjs(log.entryTime).format('YYYY-MM-DD');
+      acc[date] = acc[date] || { totalDuration: 0, count: 0 };
+      acc[date].totalDuration += log.duration / 60; 
+      acc[date].count += 1;
+      return acc;
+    }, {});
 
   const averageData = Object.keys(aggregatedData).map(date => ({
     date,
@@ -76,23 +87,23 @@ const ShelfSensorLogs = () => {
 
   return (
     <div className="container ">
-      <h2 className="badge text-light fs-4">{`Average Time per Shelf of : ${selectedMonthYear}`}</h2>
+      <h2 className="badge text-light fs-4">{`Average Time per Shelf for: ${selectedMonthYear}`}</h2>
       
       <div className="d-flex justify-content-between mb-3">
         <Button variant="primary" onClick={handlePreviousMonth}>Previous Month</Button>
-          <div className="d-flex justify-content-center align-items-center ">
-            <span className="text-light me-3">Shelf:</span>
-            <Form.Select className="w-auto" onChange={(e) => setSelectedShelf(Number(e.target.value))} value={selectedShelf}>
-              {shelves.map(shelf => (
-                <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
-              ))}
-            </Form.Select>
-          </div>
+        <div className="d-flex justify-content-center align-items-center ">
+          <span className="text-light me-3">Shelf:</span>
+          <Form.Select className="w-auto" onChange={(e) => setSelectedShelf(Number(e.target.value))} value={selectedShelf}>
+            {shelves.map(shelf => (
+              <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
+            ))}
+          </Form.Select>
+        </div>
         <Button variant="primary" onClick={handleNextMonth} disabled={monthOffset === 0}>Next Month</Button>
       </div>
       
       <div className="row">
-        {chartData ? <Line data={chartData} /> : <p>Loading chart</p>}
+        {chartData ? <Line data={chartData} /> : <p>Loading chart...</p>}
       </div>
     </div>
   );

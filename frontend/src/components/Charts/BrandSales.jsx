@@ -50,9 +50,11 @@ const BrandSales = () => {
     };
 
     useEffect(() => {
-        const currentMonth = dayjs().month();
-        const monthToDisplay = (currentMonth - monthOffset + 12) % 12;
-        const adjustedYear = dayjs().year() + Math.floor((currentMonth - monthOffset) / 12);    
+        const now = dayjs();
+        const adjustedDate = now.subtract(monthOffset, 'month');
+        const monthToDisplay = adjustedDate.month(); 
+        const adjustedYear = adjustedDate.year();
+          
 
         const salesData = calculateSalesDataForMonth(monthToDisplay, adjustedYear);
         const salesCounts = brands.map(brand => salesData[brand.name] || 0);
