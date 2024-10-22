@@ -15,10 +15,16 @@ const SalesYearReport = () => {
 
   useEffect(() => {
     const fetchPurchaseLogs = async () => {
-      const response = await axios.get('http://localhost:8080/api/track/purchase', {
+      try{
+        const response = await axios.get('http://localhost:8080/api/track/purchase', {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      setPurchaseLogs(response.data);
+        });
+        setPurchaseLogs(response.data);
+      }catch(error){
+        console.log(error);
+        setChartData(null);
+      }
+      
     };
 
     fetchPurchaseLogs();
@@ -63,7 +69,7 @@ const SalesYearReport = () => {
       <h2 className="badge text-light fs-4">Total Sales Per Month for {currentYear}</h2>
       <div className="d-flex justify-content-between mb-4">
         <Button variant="primary" onClick={handlePrevYear}>Previous Year</Button>
-        <Button variant="primary" onClick={handleNextYear} >Next Year</Button>
+        <Button variant="primary" onClick={handleNextYear} disabled={currentYear === dayjs().year()} >Next Year</Button>
       </div>
       {chartData ? (
         <Line

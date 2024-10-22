@@ -92,7 +92,7 @@ const ShelfSensorLogs = () => {
       </div>
       
       <div className="row">
-        <Line data={chartData} />
+        {chartData ? <Line data={chartData} /> : <p>Loading chart</p>}
       </div>
     </div>
   );

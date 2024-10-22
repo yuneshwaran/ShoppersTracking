@@ -17,12 +17,19 @@ const BrandSales = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const [purchaseResponse, brandResponse] = await Promise.all([
+
+            try{
+                const [purchaseResponse, brandResponse] = await Promise.all([
                 axios.get('http://localhost:8080/api/track/purchase', { headers: { Authorization: `Bearer ${token}` } }),
                 axios.get('http://localhost:8080/api/brand', { headers: { Authorization: `Bearer ${token}` } }),
-            ]);
-            setPurchaseLogs(purchaseResponse.data);
-            setBrands(brandResponse.data);
+                ]);
+                setPurchaseLogs(purchaseResponse.data);
+                setBrands(brandResponse.data);
+            }catch(error){
+                console.log("Error Fetchig data ",error);
+                setChartData(null);
+            }
+            
         };
 
         fetchData();

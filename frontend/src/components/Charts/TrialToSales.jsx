@@ -31,6 +31,7 @@ const TrialToPurchase = () => {
         setBrands(uniqueBrands);
       } catch (error) {
         console.error('Error fetching logs', error);
+        setChartData(null);
       }
     };
 
