@@ -12,7 +12,15 @@ const [NewPassword,setNewPassword] = useState('');
 const [error,setError] = useState(null);
 
 const validate =(value)=>{
-  setNewUserName(value.trim())
+  let regex = /^[a-zA-Z0-9_]*$/
+  if(regex.test(value)){
+    setNewUserName(value.trim())
+  }
+  else{
+    alert("Invalid username entered")
+    setNewUserName('');
+  }
+  
 }
 
 
@@ -93,25 +101,54 @@ export const UpdatePassword  =({ showModal, handleClose })=> {
   const [error, setError] = useState(null);
   const { token, logout } = useLogin(); 
 
+
+
+  const validatePassword = (value) => {
+    const pass = value;
+    
+    if (pass.length < 6) {
+      alert("Weak Password. Min length is '6'");
+      setPassword('');
+      setNewPassword('');
+      return false;
+    }
+  
+    const hasUpperCase = /[A-Z]/.test(pass);
+    const hasLowerCase = /[a-z]/.test(pass);
+    const hasNumbers = /\d/.test(pass);
+  
+    if (!hasUpperCase || !hasLowerCase || !hasNumbers) {
+      alert("Password must include uppercase letters, lowercase letters, numbers.");
+      setPassword('');
+      setNewPassword('');
+      return false;
+    }
+  
+    setPassword(value);
+    return true;
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-
+  
+    if (!validatePassword(password)) return;
+  
     if (!newPassword) {
       setError('Please confirm your new password.');
       return;
     }
-
+  
     if (password !== newPassword) {
       setError('New password and confirmation do not match.');
       return;
     }
-
+  
     try {
       const decodedToken = jwtDecode(token);
       const user = decodedToken.sub;
-      const body = JSON.stringify({ username: user, password: newPassword }); 
-
+      const body = JSON.stringify({ username: user, password: newPassword });
+  
       const response = await fetch('http://localhost:8080/login', {
         method: 'PUT',
         headers: {
@@ -120,19 +157,17 @@ export const UpdatePassword  =({ showModal, handleClose })=> {
         },
         body,
       });
-
-
+  
       if (!response.ok) throw new Error('Password update failed');
-
+  
       alert('Password updated successfully. Please login again.');
       handleLogout();
-      handleClose(); 
+      handleClose();
     } catch (error) {
       console.error('Error:', error);
       setError('Password update failed. Please check your credentials or connection.');
     } finally {
-
-      setPassword(''); 
+      setPassword('');
       setNewPassword('');
     }
   };

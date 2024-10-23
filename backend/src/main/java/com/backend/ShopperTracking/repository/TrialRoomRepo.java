@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface TrialRoomRepo extends JpaRepository<TrialRoom, Integer> {
-    // You can define custom query methods here if needed
+
     List<TrialRoom> findByLocation(String location);
 }

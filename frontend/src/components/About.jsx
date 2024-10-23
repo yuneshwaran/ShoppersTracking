@@ -3,9 +3,6 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 import './Styles.css'; 
 
 function About() {
-    const handleContact = () => {
-        window.location.href = 'mailto:yuneshwaranr@unitedtechno.com'; 
-    };
 
     return (
         <Container fluid className="mt-5">
@@ -71,7 +68,7 @@ function About() {
                     <span className='d-flex justify-content-center'>
                         <a className='links' href='mailto:yunesh2403@gmail.com' target='_blank'>Contact</a>
                         <a className='links mx-3' href='mailto:yunesh2403@gmail.com' target='_blank' >Feedback</a>
-                        <a className='links'>Location</a>
+                        {/* <a className='links'>Location</a> */}
                     </span>
                 </div>
             </footer>

@@ -60,7 +60,7 @@ export const LoginProvider = ({ children }) => {
     localStorage.setItem('sesion',session);
   }
 
-  const isLoggedIn = () => !!token;
+  const isLoggedIn = () => Boolean(token);
 
   useEffect(() => {
     console.log('Admin state:', admin);

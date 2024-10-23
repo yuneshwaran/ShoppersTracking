@@ -5,6 +5,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import './Styles.css'; 
 
 const LoginPage = () => {
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -33,7 +34,7 @@ const LoginPage = () => {
       const jwt = await response.text();
       login(jwt);
       alert("Login Successful!!!")
-      navigate('/', { replace: true });
+      navigate('/');
     } catch (error) {
       console.error('Login error:', error);
       setError('Invalid username or password');
